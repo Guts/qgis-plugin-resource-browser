@@ -1,0 +1,121 @@
+#! python3  # noqa: E265
+
+"""
+    Main plugin module.
+"""
+
+# standard lib
+from functools import partial
+from pathlib import Path
+
+# PyQGIS
+from qgis.core import QgsApplication, QgsSettings
+from qgis.gui import QgisInterface
+from qgis.PyQt.QtCore import QCoreApplication, QLocale, QTranslator, QUrl
+from qgis.PyQt.QtGui import QDesktopServices, QIcon
+from qgis.PyQt.QtWidgets import QAction
+
+# project
+from pyqgis_resource_browser.__about__ import (
+    DIR_PLUGIN_ROOT,
+    __title__,
+    __uri_homepage__,
+)
+from pyqgis_resource_browser.gui.dlg_settings import PlgOptionsFactory
+from pyqgis_resource_browser.toolbelt import PlgLogger
+
+# ############################################################################
+# ########## Classes ###############
+# ##################################
+
+
+class PlgPyQgisResourceBrowserPlugin:
+    def __init__(self, iface: QgisInterface):
+        """Constructor.
+
+        :param iface: An interface instance that will be passed to this class which \
+        provides the hook by which you can manipulate the QGIS application at run time.
+        :type iface: QgsInterface
+        """
+        self.iface = iface
+        self.log = PlgLogger().log
+
+        # initialize the locale
+        self.locale: str = QgsSettings().value("locale/userLocale", QLocale().name())[
+            0:2
+        ]
+        locale_path: Path = (
+            DIR_PLUGIN_ROOT / f"resources/i18n/{__title__.lower()}_{self.locale}.qm"
+        )
+        self.log(message=f"Translation: {self.locale}, {locale_path}", log_level=4)
+        if locale_path.exists():
+            self.translator = QTranslator()
+            self.translator.load(str(locale_path.resolve()))
+            QCoreApplication.installTranslator(self.translator)
+
+    def initGui(self):
+        """Set up plugin UI elements."""
+
+        # settings page within the QGIS preferences menu
+        self.options_factory = PlgOptionsFactory()
+        self.iface.registerOptionsWidgetFactory(self.options_factory)
+
+        # -- Actions
+        self.action_help = QAction(
+            QIcon(QgsApplication.getThemeIcon("mActionHelpContents.svg")),
+            self.tr("Help"),
+            self.iface.mainWindow(),
+        )
+        self.action_help.triggered.connect(
+            partial(QDesktopServices.openUrl, QUrl(__uri_homepage__))
+        )
+
+        self.action_settings = QAction(
+            QgsApplication.getThemeIcon("console/iconSettingsConsole.svg"),
+            self.tr("Settings"),
+            self.iface.mainWindow(),
+        )
+        self.action_settings.triggered.connect(
+            lambda: self.iface.showOptionsDialog(currentPage=f"mOptionsPage{__title__}")
+        )
+
+        # -- Menu
+        self.iface.addPluginToMenu(__title__, self.action_settings)
+        self.iface.addPluginToMenu(__title__, self.action_help)
+
+    def unload(self):
+        """Cleans up when plugin is disabled/uninstalled."""
+        # -- Clean up menu
+        self.iface.removePluginMenu(__title__, self.action_help)
+        self.iface.removePluginMenu(__title__, self.action_settings)
+
+        # -- Clean up preferences panel in QGIS settings
+        self.iface.unregisterOptionsWidgetFactory(self.options_factory)
+
+        # remove actions
+        del self.action_settings
+        del self.action_help
+
+    def run(self):
+        """Main process.
+
+        :raises Exception: if there is no item in the feed
+        """
+        try:
+            self.log(
+                message=self.tr(
+                    text="Everything ran OK.",
+                    context="PlgPyQgisResourceBrowserPlugin",
+                ),
+                log_level=3,
+                push=False,
+            )
+        except Exception as err:
+            self.log(
+                message=self.tr(
+                    text=f"Houston, we've got a problem: {err}",
+                    context="PlgPyQgisResourceBrowserPlugin",
+                ),
+                log_level=2,
+                push=True,
+            )

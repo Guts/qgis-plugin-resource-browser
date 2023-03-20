@@ -1,0 +1,25 @@
+[general]
+name=PyQGIS Resource Browser
+about=Helper plugin for developers to browse, preview and get the embedded icons in QGIS.
+category=None
+hasProcessingProvider=no
+description=A resource browser right into QGIS.
+icon=resources/images/default_icon.png
+tags=development,plugin
+
+# credits and contact
+author=Julien Moura, Benjamin Jakimow
+email=dev@ingeoveritas.com
+homepage=https://github.com/Guts/qgis-plugin-resource-browser
+repository=https://github.com/Guts/qgis-plugin-resource-browser
+tracker=https://github.com/Guts/qgis-plugin-resource-browser/issues
+
+# experimental flag
+deprecated=False
+experimental=True
+qgisMinimumVersion=3.28
+qgisMaximumVersion=3.99
+
+# versioning
+version=0.1.0
+changelog=
