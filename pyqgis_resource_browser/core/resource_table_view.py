@@ -9,6 +9,7 @@ class ResourceTableView(QTableView):
     """
     A table view to visualize Qt resources
     """
+
     def __init__(self, *args, **kwds):
         super().__init__(*args, **kwds)
 
