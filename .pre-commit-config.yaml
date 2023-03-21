@@ -2,7 +2,7 @@ exclude: ".venv|__pycache__|tests/dev/|tests/fixtures/"
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0
+    rev: v4.4.0
     hooks:
       - id: check-added-large-files
         args: ["--maxkb=500"]
@@ -25,24 +25,24 @@ repos:
           - "--py39-plus"
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.0.254"
+    rev: "v0.0.257"
     hooks:
       - id: ruff
         args: ["--fix-only"]
 
   - repo: https://github.com/psf/black
-    rev: 22.6.0
+    rev: 23.1.0
     hooks:
       - id: black
 
   - repo: https://github.com/pycqa/isort
-    rev: 5.10.1
+    rev: 5.12.0
     hooks:
       - id: isort
         args: ["--profile", "black", "--filter-files"]
 
   - repo: https://github.com/pycqa/flake8
-    rev: 4.0.1
+    rev: 6.0.0
     hooks:
       - id: flake8
         files: ^pyqgis_resource_browser/.*\.py$
