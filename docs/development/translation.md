@@ -5,7 +5,7 @@
 Qt Linguist tools are used to manage translations. Typically on Ubuntu:
 
 ```bash
-sudo apt install qttools5-dev-tools
+sudo apt install qt5-qmake qttools5-dev-tools
 ```
 
 ## Workflow
