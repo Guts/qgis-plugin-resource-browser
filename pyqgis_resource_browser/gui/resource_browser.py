@@ -2,7 +2,7 @@ import os
 import pathlib
 import re
 
-from PyQt5.QtCore import pyqtSignal
+from qgis.PyQt.QtCore import pyqtSignal
 
 from pyqgis_resource_browser.core.resource_table_model import ResourceTableModel
 from pyqgis_resource_browser.core.resource_table_view import ResourceTableView
