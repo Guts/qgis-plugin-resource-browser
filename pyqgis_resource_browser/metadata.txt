@@ -10,7 +10,7 @@ tags=development,plugin
 # credits and contact
 author=Julien Moura, Benjamin Jakimow
 email=dev@ingeoveritas.com
-homepage=https://github.com/Guts/qgis-plugin-resource-browser
+homepage=https://guts.github.io/qgis-plugin-resource-browser/
 repository=https://github.com/Guts/qgis-plugin-resource-browser
 tracker=https://github.com/Guts/qgis-plugin-resource-browser/issues
 
