@@ -7,7 +7,7 @@ from qgis.testing import start_app
 from pyqgis_resource_browser.core.resource_table_model import ResourceTableModel
 from pyqgis_resource_browser.gui.resource_browser import ResourceBrowser
 
-start_app()
+# start_app()
 
 
 class ResourceBrowserTests(unittest.TestCase):
