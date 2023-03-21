@@ -18,8 +18,10 @@ from qgis.PyQt.QtWidgets import QAction
 # project
 from pyqgis_resource_browser.__about__ import (
     DIR_PLUGIN_ROOT,
+    __icon_path__,
     __title__,
     __uri_homepage__,
+    __uri_related_website__,
 )
 from pyqgis_resource_browser.gui.dlg_settings import PlgOptionsFactory
 from pyqgis_resource_browser.toolbelt import PlgLogger
@@ -63,7 +65,7 @@ class PlgPyQgisResourceBrowserPlugin:
         # -- Actions
         self.action_help = QAction(
             QIcon(QgsApplication.getThemeIcon("mActionHelpContents.svg")),
-            self.tr("Help"),
+            self.tr("Documentation"),
             self.iface.mainWindow(),
         )
         self.action_help.triggered.connect(
@@ -83,6 +85,35 @@ class PlgPyQgisResourceBrowserPlugin:
         self.iface.addPluginToMenu(__title__, self.action_settings)
         self.iface.addPluginToMenu(__title__, self.action_help)
 
+        # -- Help menu
+
+        # documentation
+        self.iface.pluginHelpMenu().addSeparator()
+        self.action_help_plugin_menu_documentation = QAction(
+            QIcon(str(__icon_path__)),
+            f"{__title__} - Documentation",
+            self.iface.mainWindow(),
+        )
+        self.action_help_plugin_menu_documentation.triggered.connect(
+            partial(QDesktopServices.openUrl, QUrl(__uri_homepage__))
+        )
+
+        self.iface.pluginHelpMenu().addAction(
+            self.action_help_plugin_menu_documentation
+        )
+
+        # PyQGIS Icons Cheatsheet website
+        self.action_help_plugin_menu_cheatsheet = QAction(
+            QIcon(f"{DIR_PLUGIN_ROOT}/resources/images/pyqgis.png"),
+            "PyQGIS Icons Cheatsheet",
+            self.iface.mainWindow(),
+        )
+        self.action_help_plugin_menu_cheatsheet.triggered.connect(
+            partial(QDesktopServices.openUrl, QUrl(__uri_related_website__))
+        )
+
+        self.iface.pluginHelpMenu().addAction(self.action_help_plugin_menu_cheatsheet)
+
     def tr(self, message: str) -> str:
         """Get the translation for a string using Qt translation API.
 
@@ -99,6 +130,14 @@ class PlgPyQgisResourceBrowserPlugin:
         # -- Clean up menu
         self.iface.removePluginMenu(__title__, self.action_help)
         self.iface.removePluginMenu(__title__, self.action_settings)
+
+        # -- Clean up help menu
+        self.iface.pluginHelpMenu().removeAction(
+            self.action_help_plugin_menu_documentation
+        )
+        self.iface.pluginHelpMenu().removeAction(
+            self.action_help_plugin_menu_cheatsheet
+        )
 
         # -- Clean up preferences panel in QGIS settings
         self.iface.unregisterOptionsWidgetFactory(self.options_factory)

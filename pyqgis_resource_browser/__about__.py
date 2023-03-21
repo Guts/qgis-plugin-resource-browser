@@ -83,6 +83,8 @@ __uri_repository__: str = __plugin_md__.get("general").get("repository")
 __uri_tracker__: str = __plugin_md__.get("general").get("tracker")
 __uri__: str = __uri_repository__
 
+__uri_related_website__: str = "https://pyqgis-icons-cheatsheet.geotribu.fr/"
+
 __version__: str = __plugin_md__.get("general").get("version")
 __version_info__: tuple = tuple(
     [
@@ -90,6 +92,7 @@ __version_info__: tuple = tuple(
         for num in __version__.replace("-", ".", 1).split(".")
     ]
 )
+
 
 # #############################################################################
 # ##### Main #######################
