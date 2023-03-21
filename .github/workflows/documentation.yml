@@ -7,14 +7,15 @@ on:
       - ".github/workflows/documentation.yml"
       - "docs/**/*"
       - "requirements/documentation.txt"
-    tags: "*"
+    tags:
+      - "*"
 
 env:
   PYTHON_VERSION: 3.9
 
 jobs:
   build-docs:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Get source code
