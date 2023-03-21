@@ -1,6 +1,5 @@
 import unittest
 
-from qgis.core import QgsApplication
 from qgis.PyQt.QtWidgets import QWidget
 from qgis.testing import start_app
 
