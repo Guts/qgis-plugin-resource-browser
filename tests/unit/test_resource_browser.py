@@ -15,7 +15,7 @@ class ResourceBrowserTests(unittest.TestCase):
         self.assertIsInstance(B, QWidget)
         B.show()
         # uncomment to show the browser widget B
-        QgsApplication.exec_()
+        # QgsApplication.exec_()
         self.assertIsInstance(B.resourceModel, ResourceTableModel)
 
 
