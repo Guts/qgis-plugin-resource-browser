@@ -2,10 +2,6 @@ import os
 import pathlib
 import re
 
-from qgis.PyQt.QtCore import pyqtSignal
-
-from pyqgis_resource_browser.core.resource_table_model import ResourceTableModel
-from pyqgis_resource_browser.core.resource_table_view import ResourceTableView
 from qgis.PyQt import uic
 from qgis.PyQt.QtCore import (
     QFile,
@@ -14,6 +10,7 @@ from qgis.PyQt.QtCore import (
     QSortFilterProxyModel,
     Qt,
     QTextStream,
+    pyqtSignal,
 )
 from qgis.PyQt.QtGui import QPixmap
 from qgis.PyQt.QtSvg import QGraphicsSvgItem
@@ -29,6 +26,9 @@ from qgis.PyQt.QtWidgets import (
     QToolButton,
     QWidget,
 )
+
+from pyqgis_resource_browser.core.resource_table_model import ResourceTableModel
+from pyqgis_resource_browser.core.resource_table_view import ResourceTableView
 
 
 class ResourceGraphicsView(QGraphicsView):
@@ -57,7 +57,7 @@ class ResourceBrowser(QWidget):
     def __init__(self, *args, **kwds):
         super().__init__(*args, **kwds)
 
-        pathUi = pathlib.Path(__file__).parent / 'resource_browser.ui'
+        pathUi = pathlib.Path(__file__).parent / "resource_browser.ui"
         with open(pathUi.as_posix()) as uifile:
             uic.loadUi(uifile, baseinstance=self)
 
