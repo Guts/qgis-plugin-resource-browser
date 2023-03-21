@@ -129,3 +129,4 @@ dmypy.json
 *.zip
 # .vscode/
 *.qm
+.ruff_cache/
