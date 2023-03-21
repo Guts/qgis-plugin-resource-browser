@@ -3,7 +3,7 @@ name=PyQGIS Resource Browser
 about=Helper plugin for developers to browse, preview and get the embedded icons in QGIS.
 category=None
 hasProcessingProvider=no
-description=A resource browser right into QGIS.
+description=A Qt resource browser right into QGIS.
 icon=resources/images/default_icon.png
 tags=development,plugin
 
