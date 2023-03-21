@@ -83,6 +83,17 @@ class PlgPyQgisResourceBrowserPlugin:
         self.iface.addPluginToMenu(__title__, self.action_settings)
         self.iface.addPluginToMenu(__title__, self.action_help)
 
+    def tr(self, message: str) -> str:
+        """Get the translation for a string using Qt translation API.
+
+        :param message: string to be translated.
+        :type message: str
+
+        :returns: Translated version of message.
+        :rtype: str
+        """
+        return QCoreApplication.translate(self.__class__.__name__, message)
+
     def unload(self):
         """Cleans up when plugin is disabled/uninstalled."""
         # -- Clean up menu
