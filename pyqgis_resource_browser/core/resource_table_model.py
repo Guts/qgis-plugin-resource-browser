@@ -1,11 +1,15 @@
 import os
 from typing import Any
 
+from . import scanResources
 from qgis.PyQt.QtCore import QAbstractTableModel, QModelIndex, Qt
 from qgis.PyQt.QtGui import QIcon
 
 
 class ResourceTableModel(QAbstractTableModel):
+    """
+    A table model to show Qt resources
+    """
     def __init__(self, *args, **kwds):
         super().__init__(*args, **kwds)
 
@@ -15,6 +19,9 @@ class ResourceTableModel(QAbstractTableModel):
         self.reloadResources()
 
     def reloadResources(self):
+        """
+        Call this to reload all Qt resources
+        """
         self.beginResetModel()
         self.RESOURCES.clear()
         self.RESOURCES.extend(list(scanResources()))

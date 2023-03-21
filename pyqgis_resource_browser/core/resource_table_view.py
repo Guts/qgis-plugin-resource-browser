@@ -6,6 +6,9 @@ from qgis.PyQt.QtWidgets import QApplication, QMenu, QTableView
 
 
 class ResourceTableView(QTableView):
+    """
+    A table view to visualize Qt resources
+    """
     def __init__(self, *args, **kwds):
         super().__init__(*args, **kwds)
 
@@ -24,6 +27,7 @@ class ResourceTableView(QTableView):
             a.triggered.connect(
                 lambda *args, n=uri: QApplication.clipboard().setText(n)
             )
+
             a = m.addAction("Copy Icon")
             a.triggered.connect(
                 lambda *args, n=uri: QApplication.clipboard().setPixmap(QPixmap(n))
