@@ -8,51 +8,13 @@
 
 Helper plugin for developers to browse, preview and get the embedded icons in QGIS.
 
-## Generated options
+Interested? Go [read the documentation](https://guts.github.io/qgis-plugin-resource-browser/).
 
-### Plugin
+----
 
-"plugin_name": PyQGIS Resource Browser
-"plugin_name_slug": pyqgis_resource_browser
-"plugin_name_class": PlgPyQgisResourceBrowser
+## Credits
 
-"plugin_category": None
-"plugin_description_short":
-"plugin_description_long": It helps plugins developers.
-"plugin_description_short": Helper plugin for developers to browse, preview and get the embedded icons in QGIS.
-"plugin_icon": default_icon.png
-
-"author_name": Julien Moura
-"author_email": dev@ingeoveritas.com
-
-"qgis_version_min": 3.28
-"qgis_version_max": 3.99
-
-### Tooling
-
-This project is configured with the following tools:
-
-- [Black](https://black.readthedocs.io/en/stable/) to format the code without any existential question
-- [iSort](https://pycqa.github.io/isort/) to sort the Python imports
-
-Code rules are enforced with [pre-commit](https://pre-commit.com/) hooks.  
-Static code analisis is based on: Flake8
-
-See also: [contribution guidelines](CONTRIBUTING.md).
-
-## CI/CD
-
-Plugin is linted, tested, packaged and published with GitHub.
-
-If you mean to deploy it to the [official QGIS plugins repository](https://plugins.qgis.org/), remember to set your OSGeo credentials (`OSGEO_USER_NAME` and `OSGEO_USER_PASSWORD`) as environment variables in your CI/CD tool.
-
-### Documentation
-
-The documentation is generated using Sphinx and is automatically generated through the CI and published on Pages.
-
-- homepage: <https://github.com/Guts/qgis-plugin-resource-browser>
-- repository: <https://github.com/Guts/qgis-plugin-resource-browser>
-- tracker: <https://github.com/Guts/qgis-plugin-resource-browser/issues>
+- Generated with the [QGIS Plugin Templater](https://oslandia.gitlab.io/qgis/template-qgis-plugin/)
 
 ----
 
