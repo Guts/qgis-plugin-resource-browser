@@ -15,7 +15,7 @@ import unittest
 from pathlib import Path
 
 # 3rd party
-from semver import VersionInfo
+from packaging.version import parse
 
 # project
 from pyqgis_resource_browser import __about__
@@ -73,7 +73,7 @@ class TestPluginMetadata(unittest.TestCase):
 
     def test_version_semver(self):
         """Test if version comply with semantic versioning."""
-        self.assertTrue(VersionInfo.isvalid(__about__.__version__))
+        self.assertTrue(parse(__about__.__version__))
 
 
 # ############################################################################
