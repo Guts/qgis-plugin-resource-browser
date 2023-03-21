@@ -1,4 +1,4 @@
-from typing import Generator
+from collections.abc import Generator
 
 from qgis.PyQt.QtCore import QDirIterator
 
@@ -23,4 +23,3 @@ def printResources():
     res = sorted(list(scanResources()))
     for r in res:
         print(r)
-

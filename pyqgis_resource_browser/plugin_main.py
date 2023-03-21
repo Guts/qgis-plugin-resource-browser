@@ -8,7 +8,6 @@
 from functools import partial
 from pathlib import Path
 
-from pyqgis_resource_browser.gui.resource_browser import ResourceBrowser
 # PyQGIS
 from qgis.core import QgsApplication, QgsSettings
 from qgis.gui import QgisInterface
@@ -25,6 +24,7 @@ from pyqgis_resource_browser.__about__ import (
     __uri_related_website__,
 )
 from pyqgis_resource_browser.gui.dlg_settings import PlgOptionsFactory
+from pyqgis_resource_browser.gui.resource_browser import ResourceBrowser
 from pyqgis_resource_browser.toolbelt import PlgLogger
 
 # ############################################################################
@@ -71,9 +71,9 @@ class PlgPyQgisResourceBrowserPlugin:
         self.iface.registerOptionsWidgetFactory(self.options_factory)
 
         # -- Actions
-        self.action_browse_resources = QAction(QIcon(),
-                                               self.tr('Browse Resources'),
-                                               self.iface.mainWindow())
+        self.action_browse_resources = QAction(
+            QIcon(), self.tr("Browse Resources"), self.iface.mainWindow()
+        )
         self.action_browse_resources.triggered.connect(self.run)
 
         self.action_help = QAction(
