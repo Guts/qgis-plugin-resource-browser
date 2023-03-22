@@ -16,6 +16,7 @@ caption: Usage
 maxdepth: 1
 ---
 Installation <usage/installation>
+PyQGIS Icons Cheatsheet <https://pyqgis-icons-cheatsheet.geotribu.fr/>
 ```
 
 ```{toctree}
