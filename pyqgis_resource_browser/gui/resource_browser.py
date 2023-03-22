@@ -1,7 +1,10 @@
+# standard lib
 import os
 import pathlib
 import re
 
+# PyQGIS
+from qgis.core import QgsApplication
 from qgis.PyQt import uic
 from qgis.PyQt.QtCore import (
     QFile,
@@ -27,6 +30,7 @@ from qgis.PyQt.QtWidgets import (
     QWidget,
 )
 
+# plugin
 from pyqgis_resource_browser.core.resource_table_model import ResourceTableModel
 from pyqgis_resource_browser.core.resource_table_view import ResourceTableView
 
@@ -62,6 +66,7 @@ class ResourceBrowser(QWidget):
             uic.loadUi(uifile, baseinstance=self)
 
         self.setWindowTitle("Resource Browser")
+        self.setWindowIcon(QgsApplication.getThemeIcon("mActionAddImage.svg"))
         self.actionReload: QAction
         self.optionUseRegex: QAction
         self.tbFilter: QLineEdit
