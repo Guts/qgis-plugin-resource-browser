@@ -175,8 +175,7 @@ class PlgPyQgisResourceBrowserPlugin:
             self.browser.show()
             self.log(
                 message=self.tr(
-                    text="Everything ran OK.",
-                    context="PlgPyQgisResourceBrowserPlugin",
+                    message="Everything ran OK.",
                 ),
                 log_level=3,
                 push=False,
@@ -184,8 +183,7 @@ class PlgPyQgisResourceBrowserPlugin:
         except Exception as err:
             self.log(
                 message=self.tr(
-                    text=f"Houston, we've got a problem: {err}",
-                    context="PlgPyQgisResourceBrowserPlugin",
+                    message=f"Houston, we've got a problem: {err}",
                 ),
                 log_level=2,
                 push=True,
