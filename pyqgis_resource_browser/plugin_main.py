@@ -72,7 +72,9 @@ class PlgPyQgisResourceBrowserPlugin:
 
         # -- Actions
         self.action_browse_resources = QAction(
-            QIcon(), self.tr("Browse Resources"), self.iface.mainWindow()
+            QgsApplication.getThemeIcon("mActionAddImage.svg"),
+            self.tr("Browse resources"),
+            self.iface.mainWindow(),
         )
         self.action_browse_resources.triggered.connect(self.run)
 
