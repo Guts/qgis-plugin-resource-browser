@@ -15,9 +15,7 @@
 # import unittest
 
 from pyqgis_resource_browser.core.resource_table_model import ResourceTableModel
-from qgis.testing import unittest, start_app
-
-start_app()
+from qgis.testing import unittest
 
 
 # ############################################################################
