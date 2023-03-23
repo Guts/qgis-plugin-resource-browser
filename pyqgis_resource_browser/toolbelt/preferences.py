@@ -5,14 +5,14 @@
 """
 
 # standard
-from dataclasses import asdict, dataclass, fields, field
+from dataclasses import asdict, dataclass, field, fields
+
+# PyQGIS
+from qgis.core import QgsSettings
 
 # package
 import pyqgis_resource_browser.toolbelt.log_handler as log_hdlr
 from pyqgis_resource_browser.__about__ import __title__, __version__
-# PyQGIS
-from qgis.core import QgsSettings
-
 
 # ############################################################################
 # ########## Classes ###############
@@ -29,16 +29,20 @@ class PlgSettingsStructure:
 
     filter_prefixes: bool = True
     filter_filetypes: bool = True
-    prefix_filters: list = field(default_factory=lambda: [
-        ':/images/',
-        ':/oauth2method/',
-        ':/topology',
-        ':/geometrychecker/',
-        ':/offline_editing/',
-        ':/qt-project.org/'])
+    prefix_filters: list = field(
+        default_factory=lambda: [
+            ":/images/",
+            ":/oauth2method/",
+            ":/topology",
+            ":/geometrychecker/",
+            ":/offline_editing/",
+            ":/qt-project.org/",
+        ]
+    )
 
-    filtetype_filters: list = field(default_factory=lambda: [
-        'svg', 'png', 'ico', 'xpn'])
+    filtetype_filters: list = field(
+        default_factory=lambda: ["svg", "png", "ico", "xpn"]
+    )
 
 
 class PlgOptionsManager:
