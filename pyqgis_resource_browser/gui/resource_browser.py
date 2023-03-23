@@ -3,7 +3,6 @@ import os
 import pathlib
 import re
 
-from pyqgis_resource_browser.toolbelt import PlgOptionsManager
 # PyQGIS
 from qgis.core import QgsApplication
 from qgis.PyQt import uic
@@ -34,6 +33,7 @@ from qgis.PyQt.QtWidgets import (
 # plugin
 from pyqgis_resource_browser.core.resource_table_model import ResourceTableModel
 from pyqgis_resource_browser.core.resource_table_view import ResourceTableView
+from pyqgis_resource_browser.toolbelt import PlgOptionsManager
 
 
 class ResourceGraphicsView(QGraphicsView):
@@ -83,11 +83,15 @@ class ResourceBrowser(QWidget):
 
         self.textBrowser: QTextBrowser
 
-        self.resourceModel: ResourceTableModel = ResourceTableModel(load_resources=False)
+        self.resourceModel: ResourceTableModel = ResourceTableModel(
+            load_resources=False
+        )
 
         settings = PlgOptionsManager.get_plg_settings()
         prefix_filters = settings.prefix_filters if settings.filter_prefixes else []
-        filtetypefilters = settings.filtetype_filters if settings.filter_filetypes else []
+        filtetypefilters = (
+            settings.filtetype_filters if settings.filter_filetypes else []
+        )
         self.resourceModel.setPrefixFilters(prefix_filters)
         self.resourceModel.setFileTypeFilters(filtetypefilters)
         self.resourceModel.reloadResources()

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 ***************************************************************************
     __main__
@@ -17,10 +15,11 @@
 **************************************************************************
 """
 
-from pyqgis_resource_browser.gui.resource_browser import ResourceBrowser
 from qgis.core import QgsApplication
 from qgis.gui import QgisInterface
 from qgis.testing.mocked import get_iface
+
+from pyqgis_resource_browser.gui.resource_browser import ResourceBrowser
 
 iface: QgisInterface = None
 
@@ -37,7 +36,7 @@ def run():
     QgsApplication.instance().exec_()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # todo: add arguments that are helpful for testing, e.g. to inspect *_rc.py and *.qrc files
     # parser = argparse.ArgumentParser(description='Start the Resource Browser')
     # args = parser.parse_args()

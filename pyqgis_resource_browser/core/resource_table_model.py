@@ -1,5 +1,5 @@
 import os
-from typing import Any, List
+from typing import Any
 
 from qgis.PyQt.QtCore import QAbstractTableModel, QModelIndex, Qt
 from qgis.PyQt.QtGui import QIcon
@@ -38,20 +38,24 @@ class ResourceTableModel(QAbstractTableModel):
 
         # filter available resource domains and file types
         if len(self.prefix_filters) > 0:
-            resources = [f for r in resources for f in self.prefix_filters if r.startswith(f)]
+            resources = [
+                f for r in resources for f in self.prefix_filters if r.startswith(f)
+            ]
         if len(self.filetype_filters) > 0:
-            resources = [f for r in resources for f in self.prefix_filters if r.endswith(f)]
+            resources = [
+                f for r in resources for f in self.prefix_filters if r.endswith(f)
+            ]
 
         self.RESOURCES.extend(resources)
         self.endResetModel()
 
-    def setPrefixFilters(self, prefixes: List[str]):
+    def setPrefixFilters(self, prefixes: list[str]):
         assert isinstance(prefixes, list)
         self.prefix_filters.clear()
         self.prefix_filters.extend(prefixes)
         self.reloadResources()
 
-    def setFileTypeFilters(self, filetypes: List[str]):
+    def setFileTypeFilters(self, filetypes: list[str]):
         assert isinstance(filetypes, list)
         self.filetype_filters.clear()
         self.filetype_filters.extend(filetypes)
@@ -67,7 +71,7 @@ class ResourceTableModel(QAbstractTableModel):
         return [self.cnUri, self.cnIcon]
 
     def headerData(
-            self, section: int, orientation: Qt.Orientation, role: int = ...
+        self, section: int, orientation: Qt.Orientation, role: int = ...
     ) -> Any:
         if role == Qt.DisplayRole:
             if orientation == Qt.Horizontal:
