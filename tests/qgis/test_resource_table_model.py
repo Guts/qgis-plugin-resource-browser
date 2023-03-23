@@ -14,9 +14,9 @@
 # standard library
 # import unittest
 
-from pyqgis_resource_browser.core.resource_table_model import ResourceTableModel
 from qgis.testing import unittest
 
+from pyqgis_resource_browser.core.resource_table_model import ResourceTableModel
 
 # ############################################################################
 # ########## Classes #############
@@ -31,14 +31,14 @@ class TestResourceTableModel(unittest.TestCase):
         m.reloadResources()
         self.assertTrue(len(m) > 0)
 
-        m.setFileTypeFilters(['svg'])
+        m.setFileTypeFilters(["svg"])
         for r in m.RESOURCES:
-            self.assertTrue(r.endswith('svg'))
+            self.assertTrue(r.endswith("svg"))
 
         m.setFileTypeFilters([])
-        m.setPrefixFilters([':/images/'])
+        m.setPrefixFilters([":/images/"])
         for r in m.RESOURCES:
-            self.assertTrue(r.startswith(':/images/'))
+            self.assertTrue(r.startswith(":/images/"))
 
 
 # ############################################################################
