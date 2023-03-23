@@ -16,12 +16,10 @@
 *                                                                         *
 **************************************************************************
 """
-import argparse
-
-from qgis.gui import QgisInterface
 
 from pyqgis_resource_browser.gui.resource_browser import ResourceBrowser
 from qgis.core import QgsApplication
+from qgis.gui import QgisInterface
 from qgis.testing.mocked import get_iface
 
 iface: QgisInterface = None
