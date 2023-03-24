@@ -90,7 +90,7 @@ class ResourceBrowser(QWidget):
         settings = PlgOptionsManager.get_plg_settings()
         prefix_filters = settings.prefix_filters if settings.filter_prefixes else []
         filtetypefilters = (
-            settings.filtetype_filters if settings.filter_filetypes else []
+            settings.filetype_filters if settings.filter_filetypes else []
         )
         self.resourceModel.setPrefixFilters(prefix_filters)
         self.resourceModel.setFileTypeFilters(filtetypefilters)
