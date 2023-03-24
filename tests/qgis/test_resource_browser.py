@@ -15,12 +15,13 @@
 # import unittest
 
 from qgis.PyQt.QtWidgets import QWidget
-from qgis.testing import unittest
+from qgis.testing import unittest, start_app
 
 from pyqgis_resource_browser.core.resource_table_model import ResourceTableModel
 from pyqgis_resource_browser.gui.resource_browser import ResourceBrowser
 
-# start_app()
+# create a QgsApplication(QApplication)
+app = start_app()
 
 # ############################################################################
 # ########## Classes #############
