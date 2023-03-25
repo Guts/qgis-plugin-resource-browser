@@ -14,10 +14,13 @@
 # standard library
 # import unittest
 
-from pyqgis_resource_browser.core.resource_table_model import ResourceTableModel, ResourceTableFilterModel
 from qgis.PyQt.Qt import Qt
 from qgis.testing import unittest
 
+from pyqgis_resource_browser.core.resource_table_model import (
+    ResourceTableFilterModel,
+    ResourceTableModel,
+)
 
 # ############################################################################
 # ########## Classes #############
@@ -37,18 +40,18 @@ class TestResourceTableModel(unittest.TestCase):
         fm.setSourceModel(m)
         self.assertEqual(fm.rowCount(), n)
 
-        fm.setFileTypeFilters(['svg'])
+        fm.setFileTypeFilters(["svg"])
         self.assertTrue(fm.rowCount() < n)
         for row in range(fm.rowCount()):
             uri = fm.index(row, 0).data(Qt.UserRole)
             self.assertIsInstance(uri, str)
-            self.assertTrue(uri.endswith('svg'))
+            self.assertTrue(uri.endswith("svg"))
 
         fm.setFileTypeFilters([])
-        fm.setPrefixFilters([':/images/'])
+        fm.setPrefixFilters([":/images/"])
         for row in range(fm.rowCount()):
             uri = fm.index(row, 0).data(Qt.UserRole)
-            self.assertTrue(uri.startswith(':/images/'))
+            self.assertTrue(uri.startswith(":/images/"))
 
 
 # ############################################################################

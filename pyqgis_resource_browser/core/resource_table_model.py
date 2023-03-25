@@ -1,9 +1,7 @@
 import os
 from typing import Any
 
-from qgis.PyQt.QtCore import (
-    QSortFilterProxyModel, QAbstractTableModel, QModelIndex, Qt
-)
+from qgis.PyQt.QtCore import QAbstractTableModel, QModelIndex, QSortFilterProxyModel, Qt
 from qgis.PyQt.QtGui import QIcon
 
 from . import scanResources
@@ -15,7 +13,6 @@ class ResourceTableFilterModel(QSortFilterProxyModel):
     """
 
     def __init__(self, *args, **kwds):
-
         super().__init__(*args, **kwds)
         # self.setRecursiveFilteringEnabled(True)
         # self.setFilterCaseSensitivity(Qt.CaseInsensitive)
@@ -46,7 +43,6 @@ class ResourceTableFilterModel(QSortFilterProxyModel):
         self.invalidateFilter()
 
     def filterAcceptsRow(self, row: int, parent: QModelIndex) -> bool:
-
         b = super().filterAcceptsRow(row, parent)
         if b:
             uri: str = self.sourceModel().index(row, 0, parent).data(Qt.UserRole)
@@ -118,7 +114,7 @@ class ResourceTableModel(QAbstractTableModel):
         return [self.cnUri, self.cnIcon]
 
     def headerData(
-            self, section: int, orientation: Qt.Orientation, role: int = ...
+        self, section: int, orientation: Qt.Orientation, role: int = ...
     ) -> Any:
         if role == Qt.DisplayRole:
             if orientation == Qt.Horizontal:

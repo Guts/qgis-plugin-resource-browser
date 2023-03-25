@@ -27,6 +27,7 @@ app = start_app()
 # ########## Classes #############
 # ################################
 
+
 class TestResourceBrowser(unittest.TestCase):
     def test_resource_browser(self):
         B = ResourceBrowser()

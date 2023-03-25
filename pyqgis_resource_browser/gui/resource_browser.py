@@ -3,19 +3,10 @@ import os
 import pathlib
 import re
 
-# plugin
-from ..core.resource_table_model import ResourceTableModel, ResourceTableFilterModel
-from ..core.resource_table_view import ResourceTableView
-from ..toolbelt import PlgOptionsManager
+# PyQGIS
+from qgis.core import QgsApplication
 from qgis.PyQt import uic
-from qgis.PyQt.QtCore import (
-    QFile,
-    QModelIndex,
-    QRegExp,
-    Qt,
-    QTextStream,
-    pyqtSignal,
-)
+from qgis.PyQt.QtCore import QFile, QModelIndex, QRegExp, Qt, QTextStream, pyqtSignal
 from qgis.PyQt.QtGui import QPixmap
 from qgis.PyQt.QtSvg import QGraphicsSvgItem
 from qgis.PyQt.QtWidgets import (
@@ -30,8 +21,11 @@ from qgis.PyQt.QtWidgets import (
     QToolButton,
     QWidget,
 )
-# PyQGIS
-from qgis.core import QgsApplication
+
+# plugin
+from ..core.resource_table_model import ResourceTableFilterModel, ResourceTableModel
+from ..core.resource_table_view import ResourceTableView
+from ..toolbelt import PlgOptionsManager
 
 
 class ResourceGraphicsView(QGraphicsView):
