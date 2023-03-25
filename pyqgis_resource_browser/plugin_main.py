@@ -44,7 +44,7 @@ class PlgPyQgisResourceBrowserPlugin:
         self.action_help_plugin_menu_documentation = None
         self.action_settings = None
         self.action_browse_resources = None
-        self.options_factory = None
+        self.options_factory: PlgOptionsFactory = None
         self.action_help = None
         self.iface = iface
         self.log = PlgLogger().log
@@ -172,6 +172,7 @@ class PlgPyQgisResourceBrowserPlugin:
         try:
             if not isinstance(self.browser, ResourceBrowser):
                 self.browser = ResourceBrowser()
+                self.options_factory.configChanged.connect(self.browser.reloadConfig)
             self.browser.show()
             self.log(
                 message=self.tr(

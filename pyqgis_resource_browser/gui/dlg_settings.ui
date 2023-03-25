@@ -104,7 +104,7 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="gb_filter_filetypes">
+       <widget class="QGroupBox" name="gb_filter_resourcefiletype">
         <property name="toolTip">
          <string>Activate to show resources with specfic file type only.</string>
         </property>
@@ -116,7 +116,7 @@ p, li { white-space: pre-wrap; }
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
-          <widget class="QPlainTextEdit" name="te_filter_filetypes">
+          <widget class="QPlainTextEdit" name="te_resource_filetypes">
            <property name="plainText">
             <string>svg
 png

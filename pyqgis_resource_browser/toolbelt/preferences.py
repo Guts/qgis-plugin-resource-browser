@@ -49,6 +49,8 @@ class PlgSettingsStructure:
 class PlgOptionsManager:
     """Class to deal with settings: get, set."""
 
+    setting_keys = [f.name for f in fields(PlgSettingsStructure)]
+
     @staticmethod
     def get_plg_settings() -> PlgSettingsStructure:
         """Load and return plugin settings as a dictionary. \
@@ -91,10 +93,10 @@ class PlgOptionsManager:
 
         :return: plugin settings value matching key
         """
-        if not hasattr(PlgSettingsStructure, key):
+        if key not in PlgOptionsManager.setting_keys:
             log_hdlr.PlgLogger.log(
                 message="Bad settings key. Must be one of: {}".format(
-                    ",".join(PlgSettingsStructure._fields)
+                    ",".join(PlgOptionsManager.setting_keys)
                 ),
                 log_level=1,
             )
@@ -129,10 +131,10 @@ class PlgOptionsManager:
         :rtype: bool
         """
         print(key)
-        if not hasattr(PlgSettingsStructure, key):
+        if key not in PlgOptionsManager.setting_keys:
             log_hdlr.PlgLogger.log(
                 message=f"Bad settings key: {key}. Must be one of: "
-                f"{','.join([f.name for f in fields(PlgSettingsStructure)])}",
+                f"{','.join(PlgOptionsManager.setting_keys)}",
                 log_level=2,
             )
             return False

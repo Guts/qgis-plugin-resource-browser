@@ -39,7 +39,17 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="tbFilter"/>
+      <widget class="QgsFilterLineEdit" name="tbFilter">
+       <property name="nullValue">
+        <string/>
+       </property>
+       <property name="showSearchIcon">
+        <bool>true</bool>
+       </property>
+       <property name="qgisRelation" stdset="0">
+        <string notr="true"/>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QToolButton" name="btnUseRegex">
@@ -237,6 +247,11 @@ QSplitter::handle:pressed {
   </action>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>QgsFilterLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>qgsfilterlineedit.h</header>
+  </customwidget>
   <customwidget>
    <class>ResourceTableView</class>
    <extends>QTableView</extends>

@@ -83,12 +83,8 @@ class ResourceBrowser(QWidget):
 
         self.resourceModel: ResourceTableModel = ResourceTableModel()
 
-        settings = PlgOptionsManager.get_plg_settings()
-
         self.resourceProxyModel = ResourceTableFilterModel()
         self.resourceProxyModel.setSourceModel(self.resourceModel)
-        self.resourceProxyModel.setPrefixFilters(settings.prefix_filters)
-        self.resourceProxyModel.setFileTypeFilters(settings.filetype_filters)
         self.resourceProxyModel.setFilterKeyColumn(0)
         self.resourceProxyModel.setFilterRole(Qt.UserRole)
 
@@ -106,6 +102,20 @@ class ResourceBrowser(QWidget):
         self.optionCaseSensitive.toggled.connect(self.updateFilter)
         self.optionUseRegex.toggled.connect(self.updateFilter)
         self.tbFilter.textChanged.connect(self.updateFilter)
+
+        self.reloadConfig()
+
+    def reloadConfig(self):
+        settings = PlgOptionsManager.get_plg_settings()
+        if settings.filter_prefixes:
+            self.resourceProxyModel.setPrefixFilters(settings.prefix_filters)
+        else:
+            self.resourceProxyModel.setPrefixFilters([])
+
+        if settings.filter_filetypes:
+            self.resourceProxyModel.setFileTypeFilters(settings.filetype_filters)
+        else:
+            self.resourceProxyModel.setFileTypeFilters([])
 
     def updateFilter(self):
         txt = self.tbFilter.text()
