@@ -13,6 +13,7 @@ from qgis.core import QgsApplication
 from qgis.gui import QgsOptionsPageWidget, QgsOptionsWidgetFactory
 from qgis.PyQt import uic
 from qgis.PyQt.Qt import QUrl
+from qgis.PyQt.QtCore import pyqtSignal
 from qgis.PyQt.QtGui import QDesktopServices, QIcon
 
 # project
@@ -40,6 +41,8 @@ FORM_CLASS, _ = uic.loadUiType(Path(__file__).parent / f"{Path(__file__).stem}.u
 
 class ConfigOptionsPage(FORM_CLASS, QgsOptionsPageWidget):
     """Settings form embedded into QGIS 'options' menu."""
+
+    configChanged = pyqtSignal()
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -82,6 +85,13 @@ class ConfigOptionsPage(FORM_CLASS, QgsOptionsPageWidget):
         settings.debug_mode = self.opt_debug.isChecked()
         settings.version = __version__
 
+        prefix_filters = self.te_resource_prefixes.toPlainText().strip().split("\n")
+        filetype_filters = self.te_resource_filetypes.toPlainText().strip().split("\n")
+        settings.prefix_filters = [f for f in prefix_filters if f != ""]
+        settings.filetype_filters = [f for f in filetype_filters if f != ""]
+        settings.filter_filetypes = self.gb_filter_resourcefiletype.isChecked()
+        settings.filter_prefixes = self.gb_filter_resourceprefix.isChecked()
+
         # dump new settings into QgsSettings
         self.plg_settings.save_from_object(settings)
 
@@ -90,6 +100,7 @@ class ConfigOptionsPage(FORM_CLASS, QgsOptionsPageWidget):
                 message="DEBUG - Settings successfully saved.",
                 log_level=4,
             )
+        self.configChanged.emit()
 
     def load_settings(self):
         """Load options from QgsSettings into UI form."""
@@ -98,6 +109,12 @@ class ConfigOptionsPage(FORM_CLASS, QgsOptionsPageWidget):
         # global
         self.opt_debug.setChecked(settings.debug_mode)
         self.lbl_version_saved_value.setText(settings.version)
+
+        self.gb_filter_resourceprefix.setChecked(settings.filter_prefixes)
+        self.gb_filter_resourcefiletype.setChecked(settings.filter_filetypes)
+
+        self.te_resource_prefixes.setPlainText("\n".join(settings.prefix_filters))
+        self.te_resource_filetypes.setPlainText("\n".join(settings.filetype_filters))
 
     def reset_settings(self):
         """Reset settings to default values (set in preferences.py module)."""
@@ -108,10 +125,13 @@ class ConfigOptionsPage(FORM_CLASS, QgsOptionsPageWidget):
 
         # update the form
         self.load_settings()
+        self.configChanged.emit()
 
 
 class PlgOptionsFactory(QgsOptionsWidgetFactory):
     """Factory for options widget."""
+
+    configChanged = pyqtSignal()
 
     def __init__(self):
         """Constructor."""
@@ -134,7 +154,9 @@ class PlgOptionsFactory(QgsOptionsWidgetFactory):
         :return: options page for tab widget
         :rtype: ConfigOptionsPage
         """
-        return ConfigOptionsPage(parent)
+        page = ConfigOptionsPage(parent)
+        page.configChanged.connect(self.configChanged.emit)
+        return page
 
     def title(self) -> str:
         """Returns plugin title, used to name the tab in QGIS options tab widget.

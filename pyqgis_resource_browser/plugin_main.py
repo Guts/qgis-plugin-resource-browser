@@ -24,6 +24,7 @@ from pyqgis_resource_browser.__about__ import (
     __uri_related_website__,
 )
 from pyqgis_resource_browser.gui.dlg_settings import PlgOptionsFactory
+from pyqgis_resource_browser.gui.resource_browser import ResourceBrowser
 from pyqgis_resource_browser.toolbelt import PlgLogger
 
 # ############################################################################
@@ -39,8 +40,15 @@ class PlgPyQgisResourceBrowserPlugin:
         provides the hook by which you can manipulate the QGIS application at run time.
         :type iface: QgsInterface
         """
+        self.action_help_plugin_menu_cheatsheet = None
+        self.action_help_plugin_menu_documentation = None
+        self.action_settings = None
+        self.action_browse_resources = None
+        self.options_factory: PlgOptionsFactory = None
+        self.action_help = None
         self.iface = iface
         self.log = PlgLogger().log
+        self.browser: ResourceBrowser = None
 
         # initialize the locale
         self.locale: str = QgsSettings().value("locale/userLocale", QLocale().name())[
@@ -63,6 +71,13 @@ class PlgPyQgisResourceBrowserPlugin:
         self.iface.registerOptionsWidgetFactory(self.options_factory)
 
         # -- Actions
+        self.action_browse_resources = QAction(
+            QgsApplication.getThemeIcon("mActionAddImage.svg"),
+            self.tr("Browse resources"),
+            self.iface.mainWindow(),
+        )
+        self.action_browse_resources.triggered.connect(self.run)
+
         self.action_help = QAction(
             QIcon(QgsApplication.getThemeIcon("mActionHelpContents.svg")),
             self.tr("Documentation"),
@@ -82,6 +97,7 @@ class PlgPyQgisResourceBrowserPlugin:
         )
 
         # -- Menu
+        self.iface.addPluginToMenu(__title__, self.action_browse_resources)
         self.iface.addPluginToMenu(__title__, self.action_settings)
         self.iface.addPluginToMenu(__title__, self.action_help)
 
@@ -128,6 +144,7 @@ class PlgPyQgisResourceBrowserPlugin:
     def unload(self):
         """Cleans up when plugin is disabled/uninstalled."""
         # -- Clean up menu
+        self.iface.removePluginMenu(__title__, self.action_browse_resources)
         self.iface.removePluginMenu(__title__, self.action_help)
         self.iface.removePluginMenu(__title__, self.action_settings)
 
@@ -143,6 +160,7 @@ class PlgPyQgisResourceBrowserPlugin:
         self.iface.unregisterOptionsWidgetFactory(self.options_factory)
 
         # remove actions
+        del self.action_browse_resources
         del self.action_settings
         del self.action_help
 
@@ -152,10 +170,13 @@ class PlgPyQgisResourceBrowserPlugin:
         :raises Exception: if there is no item in the feed
         """
         try:
+            if not isinstance(self.browser, ResourceBrowser):
+                self.browser = ResourceBrowser()
+                self.options_factory.configChanged.connect(self.browser.reloadConfig)
+            self.browser.show()
             self.log(
                 message=self.tr(
-                    text="Everything ran OK.",
-                    context="PlgPyQgisResourceBrowserPlugin",
+                    message="Everything ran OK.",
                 ),
                 log_level=3,
                 push=False,
@@ -163,8 +184,7 @@ class PlgPyQgisResourceBrowserPlugin:
         except Exception as err:
             self.log(
                 message=self.tr(
-                    text=f"Houston, we've got a problem: {err}",
-                    context="PlgPyQgisResourceBrowserPlugin",
+                    message=f"Houston, we've got a problem: {err}",
                 ),
                 log_level=2,
                 push=True,

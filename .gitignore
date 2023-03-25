@@ -125,6 +125,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# PyCharm stuff
+.idea*
 # -- CUSTOM ----
 *.zip
 # .vscode/

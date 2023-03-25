@@ -10,17 +10,34 @@
         # for specific test
         python -m unittest tests.qgis.test_plg_preferences.TestPlgPreferences.test_plg_preferences_structure
 """
+from PyQt5.QtGui import QIcon
+from qgis.gui import QgsOptionsDialogBase
+from qgis.PyQt.Qt import Qt
 
 # standard library
-from qgis.testing import unittest
+from qgis.testing import start_app, unittest
 
 # project
 from pyqgis_resource_browser.__about__ import __version__
+from pyqgis_resource_browser.gui.dlg_settings import (
+    ConfigOptionsPage,
+    PlgOptionsFactory,
+)
+from pyqgis_resource_browser.toolbelt import PlgOptionsManager
 from pyqgis_resource_browser.toolbelt.preferences import PlgSettingsStructure
 
+app = start_app()
 # ############################################################################
 # ########## Classes #############
 # ################################
+
+
+class TestOptionsDialog(QgsOptionsDialogBase):
+    def __init__(self, parent=None):
+        super(QgsOptionsDialogBase, self).__init__(
+            "PROPERTIES", parent, Qt.Dialog, settings=None
+        )
+        self.initOptionsBase(False, "PROPERTIES")
 
 
 class TestPlgPreferences(unittest.TestCase):
@@ -36,6 +53,22 @@ class TestPlgPreferences(unittest.TestCase):
         self.assertTrue(hasattr(settings, "version"))
         self.assertIsInstance(settings.version, str)
         self.assertEqual(settings.version, __version__)
+
+    def test_dlg_settings(self):
+        factory = PlgOptionsFactory()
+        page = factory.createWidget(None)
+        self.assertIsInstance(factory.title(), str)
+        self.assertIsInstance(factory.icon(), QIcon)
+        self.assertIsInstance(page, ConfigOptionsPage)
+        page.te_resource_prefixes.setPlainText("")
+        page.apply()
+        settings = PlgOptionsManager.get_plg_settings()
+        self.assertEqual(settings.prefix_filters, [])
+        page.reset_settings()
+        settings = PlgOptionsManager.get_plg_settings()
+        self.assertTrue(len(settings.prefix_filters) > 0)
+        page.show()
+        # app.exec_()
 
 
 # ############################################################################

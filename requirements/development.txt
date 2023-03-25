@@ -1,4 +1,4 @@
-# Develoment dependencies
+# Development dependencies
 # -----------------------
 
 black

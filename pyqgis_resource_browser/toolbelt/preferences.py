@@ -5,7 +5,7 @@
 """
 
 # standard
-from dataclasses import asdict, dataclass, fields
+from dataclasses import MISSING, asdict, dataclass, field, fields
 
 # PyQGIS
 from qgis.core import QgsSettings
@@ -27,8 +27,30 @@ class PlgSettingsStructure:
     debug_mode: bool = False
     version: str = __version__
 
+    # logic
+    filter_prefixes: bool = True
+    filter_filetypes: bool = True
+    prefix_filters: list[str] = field(
+        default_factory=lambda: [
+            ":/geometrychecker/",
+            ":/images/",
+            ":/oauth2method/",
+            ":/offline_editing/",
+            ":/qt-project.org/",
+            ":/topology",
+        ]
+    )
+
+    filetype_filters: list[str] = field(
+        default_factory=lambda: ["ico", "png", "svg", "xpn"]
+    )
+
 
 class PlgOptionsManager:
+    """Class to deal with settings: get, set."""
+
+    setting_keys = [f.name for f in fields(PlgSettingsStructure)]
+
     @staticmethod
     def get_plg_settings() -> PlgSettingsStructure:
         """Load and return plugin settings as a dictionary. \
@@ -47,9 +69,17 @@ class PlgOptionsManager:
         # map settings values to preferences object
         li_settings_values = []
         for i in settings_fields:
-            li_settings_values.append(
-                settings.value(key=i.name, defaultValue=i.default, type=i.type)
-            )
+            try:
+                li_settings_values.append(
+                    settings.value(key=i.name, defaultValue=i.default, type=i.type)
+                )
+            except TypeError:
+                defaultValue = (
+                    i.default_factory() if i.default is MISSING else i.default
+                )
+                li_settings_values.append(
+                    settings.value(key=i.name, defaultValue=defaultValue)
+                )
 
         # instanciate new settings object
         options = PlgSettingsStructure(*li_settings_values)
@@ -65,10 +95,10 @@ class PlgOptionsManager:
 
         :return: plugin settings value matching key
         """
-        if not hasattr(PlgSettingsStructure, key):
+        if key not in PlgOptionsManager.setting_keys:
             log_hdlr.PlgLogger.log(
                 message="Bad settings key. Must be one of: {}".format(
-                    ",".join(PlgSettingsStructure._fields)
+                    ",".join(PlgOptionsManager.setting_keys)
                 ),
                 log_level=1,
             )
@@ -102,11 +132,11 @@ class PlgOptionsManager:
         :return: operation status
         :rtype: bool
         """
-        if not hasattr(PlgSettingsStructure, key):
+        print(key)
+        if key not in PlgOptionsManager.setting_keys:
             log_hdlr.PlgLogger.log(
-                message="Bad settings key. Must be one of: {}".format(
-                    ",".join(PlgSettingsStructure._fields)
-                ),
+                message=f"Bad settings key: {key}. Must be one of: "
+                f"{','.join(PlgOptionsManager.setting_keys)}",
                 log_level=2,
             )
             return False
@@ -117,11 +147,12 @@ class PlgOptionsManager:
         try:
             settings.setValue(key, value)
             out_value = True
+            log_hdlr.PlgLogger.log(
+                f"Setting `{key}` saved with value `{value}`", log_level=4
+            )
         except Exception as err:
             log_hdlr.PlgLogger.log(
-                message="Error occurred trying to set settings: {}.Trace: {}".format(
-                    key, err
-                )
+                message=f"Error occurred trying to set settings: {key}.Trace: {err}"
             )
             out_value = False
 
