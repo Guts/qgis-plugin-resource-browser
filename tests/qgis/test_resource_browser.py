@@ -27,14 +27,13 @@ app = start_app()
 # ########## Classes #############
 # ################################
 
-
 class TestResourceBrowser(unittest.TestCase):
     def test_resource_browser(self):
         B = ResourceBrowser()
         self.assertIsInstance(B, QWidget)
         B.show()
         # uncomment to show the browser widget B
-        # QgsApplication.exec_()
+        # app.exec_()
         self.assertIsInstance(B.resourceModel, ResourceTableModel)
 
 

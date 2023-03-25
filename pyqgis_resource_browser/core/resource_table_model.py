@@ -1,10 +1,63 @@
 import os
 from typing import Any
 
-from qgis.PyQt.QtCore import QAbstractTableModel, QModelIndex, Qt
+from qgis.PyQt.QtCore import (
+    QSortFilterProxyModel, QAbstractTableModel, QModelIndex, Qt
+)
 from qgis.PyQt.QtGui import QIcon
 
 from . import scanResources
+
+
+class ResourceTableFilterModel(QSortFilterProxyModel):
+    """
+    A QSortFilterProxyModel to filter resource strings
+    """
+
+    def __init__(self, *args, **kwds):
+
+        super().__init__(*args, **kwds)
+        # self.setRecursiveFilteringEnabled(True)
+        # self.setFilterCaseSensitivity(Qt.CaseInsensitive)
+
+        self.prefix_filters = []
+        self.filetype_filters = []
+
+    def setPrefixFilters(self, prefixes: list[str]):
+        """
+        Sets a list of prefixes. Each shown resource URI needs to have one of these.
+        Use an empty list [] to disable prefix filtering.
+        :param prefixes: List[str]
+        """
+        assert isinstance(prefixes, list)
+        self.prefix_filters.clear()
+        self.prefix_filters.extend(prefixes)
+        self.invalidateFilter()
+
+    def setFileTypeFilters(self, filetypes: list[str]):
+        """
+        Sets a list of filtetypes (or suffixes) that show resources should relate to.
+        Use an empty list [] to disable filetype filtering.
+        :param filetypes: List[str]
+        """
+        assert isinstance(filetypes, list)
+        self.filetype_filters.clear()
+        self.filetype_filters.extend(filetypes)
+        self.invalidateFilter()
+
+    def filterAcceptsRow(self, row: int, parent: QModelIndex) -> bool:
+
+        b = super().filterAcceptsRow(row, parent)
+        if b:
+            uri: str = self.sourceModel().index(row, 0, parent).data(Qt.UserRole)
+            if uri:
+                if len(self.prefix_filters) > 0:
+                    if not any(uri.startswith(f) for f in self.prefix_filters):
+                        return False
+                if len(self.filetype_filters) > 0:
+                    if not any(uri.endswith(f) for f in self.filetype_filters):
+                        return False
+        return b
 
 
 class ResourceTableModel(QAbstractTableModel):
@@ -13,6 +66,12 @@ class ResourceTableModel(QAbstractTableModel):
     """
 
     def __init__(self, *args, load_resources: bool = True, **kwds):
+        """
+        :param args:
+        :param load_resources: set False to postpone resource loading until
+                .reloadResources() is called explicitly.
+        :param kwds:
+        """
         super().__init__(*args, **kwds)
 
         self.cnUri = "Path"
@@ -49,18 +108,6 @@ class ResourceTableModel(QAbstractTableModel):
         self.RESOURCES.extend(resources)
         self.endResetModel()
 
-    def setPrefixFilters(self, prefixes: list[str]):
-        assert isinstance(prefixes, list)
-        self.prefix_filters.clear()
-        self.prefix_filters.extend(prefixes)
-        self.reloadResources()
-
-    def setFileTypeFilters(self, filetypes: list[str]):
-        assert isinstance(filetypes, list)
-        self.filetype_filters.clear()
-        self.filetype_filters.extend(filetypes)
-        self.reloadResources()
-
     def columnCount(self, parent: QModelIndex = ...) -> int:
         return 2
 
@@ -71,7 +118,7 @@ class ResourceTableModel(QAbstractTableModel):
         return [self.cnUri, self.cnIcon]
 
     def headerData(
-        self, section: int, orientation: Qt.Orientation, role: int = ...
+            self, section: int, orientation: Qt.Orientation, role: int = ...
     ) -> Any:
         if role == Qt.DisplayRole:
             if orientation == Qt.Horizontal:

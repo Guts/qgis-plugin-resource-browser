@@ -5,7 +5,7 @@
 """
 
 # standard
-from dataclasses import asdict, dataclass, field, fields
+from dataclasses import asdict, dataclass, field, fields, MISSING
 
 # PyQGIS
 from qgis.core import QgsSettings
@@ -72,8 +72,9 @@ class PlgOptionsManager:
                     settings.value(key=i.name, defaultValue=i.default, type=i.type)
                 )
             except TypeError:
+                defaultValue = i.default_factory() if i.default is MISSING else i.default
                 li_settings_values.append(
-                    settings.value(key=i.name, defaultValue=i.default)
+                    settings.value(key=i.name, defaultValue=defaultValue)
                 )
 
         # instanciate new settings object

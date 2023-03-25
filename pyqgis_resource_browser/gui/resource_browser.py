@@ -3,14 +3,15 @@ import os
 import pathlib
 import re
 
-# PyQGIS
-from qgis.core import QgsApplication
+# plugin
+from ..core.resource_table_model import ResourceTableModel, ResourceTableFilterModel
+from ..core.resource_table_view import ResourceTableView
+from ..toolbelt import PlgOptionsManager
 from qgis.PyQt import uic
 from qgis.PyQt.QtCore import (
     QFile,
     QModelIndex,
     QRegExp,
-    QSortFilterProxyModel,
     Qt,
     QTextStream,
     pyqtSignal,
@@ -29,11 +30,8 @@ from qgis.PyQt.QtWidgets import (
     QToolButton,
     QWidget,
 )
-
-# plugin
-from pyqgis_resource_browser.core.resource_table_model import ResourceTableModel
-from pyqgis_resource_browser.core.resource_table_view import ResourceTableView
-from pyqgis_resource_browser.toolbelt import PlgOptionsManager
+# PyQGIS
+from qgis.core import QgsApplication
 
 
 class ResourceGraphicsView(QGraphicsView):
@@ -83,23 +81,16 @@ class ResourceBrowser(QWidget):
 
         self.textBrowser: QTextBrowser
 
-        self.resourceModel: ResourceTableModel = ResourceTableModel(
-            load_resources=False
-        )
+        self.resourceModel: ResourceTableModel = ResourceTableModel()
 
         settings = PlgOptionsManager.get_plg_settings()
-        prefix_filters = settings.prefix_filters if settings.filter_prefixes else []
-        filtetypefilters = (
-            settings.filetype_filters if settings.filter_filetypes else []
-        )
-        self.resourceModel.setPrefixFilters(prefix_filters)
-        self.resourceModel.setFileTypeFilters(filtetypefilters)
-        self.resourceModel.reloadResources()
 
-        self.resourceProxyModel = QSortFilterProxyModel()
+        self.resourceProxyModel = ResourceTableFilterModel()
+        self.resourceProxyModel.setSourceModel(self.resourceModel)
+        self.resourceProxyModel.setPrefixFilters(settings.prefix_filters)
+        self.resourceProxyModel.setFileTypeFilters(settings.filetype_filters)
         self.resourceProxyModel.setFilterKeyColumn(0)
         self.resourceProxyModel.setFilterRole(Qt.UserRole)
-        self.resourceProxyModel.setSourceModel(self.resourceModel)
 
         self.tableView.setSortingEnabled(True)
         self.tableView.setModel(self.resourceProxyModel)
