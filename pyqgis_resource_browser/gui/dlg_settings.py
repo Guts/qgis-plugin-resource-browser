@@ -85,10 +85,10 @@ class ConfigOptionsPage(FORM_CLASS, QgsOptionsPageWidget):
         settings.debug_mode = self.opt_debug.isChecked()
         settings.version = __version__
 
-        prefix_filters = self.te_resource_prefixes.toPlainText().strip().split('\n')
-        filetype_filters = self.te_resource_filetypes.toPlainText().strip().split('\n')
-        settings.prefix_filters = [f for f in prefix_filters if f != '']
-        settings.filetype_filters = [f for f in filetype_filters if f != '']
+        prefix_filters = self.te_resource_prefixes.toPlainText().strip().split("\n")
+        filetype_filters = self.te_resource_filetypes.toPlainText().strip().split("\n")
+        settings.prefix_filters = [f for f in prefix_filters if f != ""]
+        settings.filetype_filters = [f for f in filetype_filters if f != ""]
         settings.filter_filetypes = self.gb_filter_resourcefiletype.isChecked()
         settings.filter_prefixes = self.gb_filter_resourceprefix.isChecked()
 
@@ -113,8 +113,8 @@ class ConfigOptionsPage(FORM_CLASS, QgsOptionsPageWidget):
         self.gb_filter_resourceprefix.setChecked(settings.filter_prefixes)
         self.gb_filter_resourcefiletype.setChecked(settings.filter_filetypes)
 
-        self.te_resource_prefixes.setPlainText('\n'.join(settings.prefix_filters))
-        self.te_resource_filetypes.setPlainText('\n'.join(settings.filetype_filters))
+        self.te_resource_prefixes.setPlainText("\n".join(settings.prefix_filters))
+        self.te_resource_filetypes.setPlainText("\n".join(settings.filetype_filters))
 
     def reset_settings(self):
         """Reset settings to default values (set in preferences.py module)."""
