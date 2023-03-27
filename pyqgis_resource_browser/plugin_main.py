@@ -55,7 +55,7 @@ class PlgPyQgisResourceBrowserPlugin:
             0:2
         ]
         locale_path: Path = (
-            DIR_PLUGIN_ROOT / f"resources/i18n/{__title__.lower()}_{self.locale}.qm"
+            DIR_PLUGIN_ROOT / f"resources/i18n/pyqgis_resource_browser_{self.locale}.qm"
         )
         self.log(message=f"Translation: {self.locale}, {locale_path}", log_level=4)
         if locale_path.exists():
