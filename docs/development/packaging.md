@@ -28,3 +28,11 @@ Through git workflow:
 1. Optionally change the version number in `metadata.txt`
 1. Apply a git tag with the relevant version: `git tag -a X.y.z {git commit hash} -m "This version rocks!"`
 1. Push tag to main branch: `git push origin X.y.z`
+
+### Ups?
+
+```sh
+git tag -d old
+git push origin :refs/tags/old
+git push --tags
+```
