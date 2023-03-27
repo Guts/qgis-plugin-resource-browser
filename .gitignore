@@ -132,3 +132,4 @@ dmypy.json
 # .vscode/
 *.qm
 .ruff_cache/
+pyqgis_resource_browser/gui/*.db
