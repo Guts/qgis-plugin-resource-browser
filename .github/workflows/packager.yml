@@ -1,7 +1,7 @@
 name: "📦 Packaging & 🚀 Release"
 
 env:
-  PROJECT_FOLDER: "qtribu"
+  PROJECT_FOLDER: "pyqgis_resource_browser"
   PYTHON_VERSION: 3.9
 
 on:
