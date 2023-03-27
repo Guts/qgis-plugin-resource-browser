@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>wdg_resource_browser</class>
+ <widget class="QWidget" name="wdg_resource_browser">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,10 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>PyQGIS Icons Browser</string>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -54,7 +57,7 @@
      <item>
       <widget class="QToolButton" name="btnUseRegex">
        <property name="text">
-        <string>...</string>
+        <string notr="true">...</string>
        </property>
        <property name="autoRaise">
         <bool>true</bool>
@@ -64,7 +67,7 @@
      <item>
       <widget class="QToolButton" name="btnCaseSensitive">
        <property name="text">
-        <string>...</string>
+        <string notr="true">...</string>
        </property>
        <property name="autoRaise">
         <bool>true</bool>
@@ -74,7 +77,7 @@
      <item>
       <widget class="QToolButton" name="btnReload">
        <property name="text">
-        <string>...</string>
+        <string notr="true">...</string>
        </property>
        <property name="autoRaise">
         <bool>true</bool>
@@ -129,7 +132,7 @@ QSplitter::handle:pressed {
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="pageImage">
        <attribute name="title">
@@ -219,7 +222,7 @@ QSplitter::handle:pressed {
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>.*</string>
+    <string notr="true">.*</string>
    </property>
    <property name="toolTip">
     <string>Activate to use regular expressions</string>
@@ -233,16 +236,19 @@ QSplitter::handle:pressed {
    <property name="text">
     <string>Reload</string>
    </property>
+   <property name="toolTip">
+    <string>Reload</string>
+   </property>
   </action>
   <action name="optionCaseSensitive">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>cC</string>
+    <string notr="true">cC</string>
    </property>
    <property name="toolTip">
-    <string>Activate to filter case-sensitive</string>
+    <string notr="true">Activate to filter case-sensitive</string>
    </property>
   </action>
  </widget>
