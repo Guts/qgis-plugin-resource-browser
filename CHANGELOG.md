@@ -16,7 +16,7 @@ Unreleased
 
 -->
 
-## 0.1.0 - 2023-03-20
+## 0.1.0 - 2023-03-27
 
-- First release
+- Reuse logic and UI extracted from ENMap-Box plugin
 - Generated with the [QGIS Plugins templater](https://oslandia.gitlab.io/qgis/template-qgis-plugin/)
