@@ -132,7 +132,6 @@ class PlgOptionsManager:
         :return: operation status
         :rtype: bool
         """
-        print(key)
         if key not in PlgOptionsManager.setting_keys:
             log_hdlr.PlgLogger.log(
                 message=f"Bad settings key: {key}. Must be one of: "

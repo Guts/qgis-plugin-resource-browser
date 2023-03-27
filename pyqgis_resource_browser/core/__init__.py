@@ -13,13 +13,3 @@ def scanResources(path: str = ":") -> Generator[str, None, None]:
             yield from scanResources(path=entry)
         elif D.fileInfo().isFile():
             yield D.filePath()
-
-
-def printResources():
-    """
-    Prints all available resources in the Qt Resource System
-    """
-    print("Available resources:")
-    res = sorted(list(scanResources()))
-    for r in res:
-        print(r)
