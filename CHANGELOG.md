@@ -16,6 +16,11 @@ Unreleased
 
 -->
 
+## 0.1.1 - 2023-03-27
+
+- Fix icon
+- Fix deployment through GitHub Actions
+
 ## 0.1.0 - 2023-03-27
 
 - Reuse logic and UI extracted from ENMap-Box plugin
