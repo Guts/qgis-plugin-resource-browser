@@ -37,7 +37,13 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Filter</string>
+        <string>Filter:</string>
+       </property>
+       <property name="margin">
+        <number>2</number>
+       </property>
+       <property name="textInteractionFlags">
+        <set>Qt::NoTextInteraction</set>
        </property>
       </widget>
      </item>
@@ -81,6 +87,13 @@
        </property>
        <property name="autoRaise">
         <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_settings">
+       <property name="text">
+        <string>Settings</string>
        </property>
       </widget>
      </item>

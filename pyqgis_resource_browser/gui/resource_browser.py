@@ -2,8 +2,8 @@
 import os
 import pathlib
 import re
+from functools import partial
 
-# PyQGIS
 from qgis.core import QgsApplication
 from qgis.PyQt import uic
 from qgis.PyQt.QtCore import QFile, QModelIndex, QRegExp, Qt, QTextStream, pyqtSignal
@@ -22,7 +22,12 @@ from qgis.PyQt.QtWidgets import (
     QWidget,
 )
 
+# PyQGIS
+from qgis.utils import iface
+
 # plugin
+from pyqgis_resource_browser.__about__ import __title__
+
 from ..core.resource_table_model import ResourceTableFilterModel, ResourceTableModel
 from ..core.resource_table_view import ResourceTableView
 from ..toolbelt import PlgOptionsManager
@@ -96,6 +101,16 @@ class ResourceBrowser(QWidget):
         self.optionCaseSensitive.toggled.connect(self.updateFilter)
         self.optionUseRegex.toggled.connect(self.updateFilter)
         self.tbFilter.textChanged.connect(self.updateFilter)
+
+        # settings button
+        self.btn_settings.setToolTip(self.tr("Settings"))
+        self.btn_settings.setText("")
+        self.btn_settings.setIcon(
+            QgsApplication.getThemeIcon("console/iconSettingsConsole.svg")
+        )
+        self.btn_settings.pressed.connect(
+            partial(iface.showOptionsDialog, currentPage=f"mOptionsPage{__title__}")
+        )
 
         self.reloadConfig()
 
