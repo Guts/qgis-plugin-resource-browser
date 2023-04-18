@@ -16,6 +16,11 @@ Unreleased
 
 -->
 
+## 0.2.0 - 2023-04-19
+
+- Add settings shortcut in main UI
+- Minor improvments
+
 ## 0.1.1 - 2023-03-27
 
 - Fix icon

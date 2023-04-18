@@ -16,10 +16,10 @@ tracker=https://github.com/Guts/qgis-plugin-resource-browser/issues
 
 # experimental flag
 deprecated=False
-experimental=True
+experimental=False
 qgisMinimumVersion=3.28
 qgisMaximumVersion=3.99
 
 # versioning
-version=0.1.0
+version=0.2.0
 changelog=
