@@ -67,8 +67,9 @@ class PlgPyQgisResourceBrowserPlugin:
         """Set up plugin UI elements."""
 
         # settings page within the QGIS preferences menu
-        self.options_factory = PlgOptionsFactory()
-        self.iface.registerOptionsWidgetFactory(self.options_factory)
+        if not self.options_factory:
+            self.options_factory = PlgOptionsFactory()
+            self.iface.registerOptionsWidgetFactory(self.options_factory)
 
         # -- Actions
         self.action_browse_resources = QAction(
@@ -79,7 +80,7 @@ class PlgPyQgisResourceBrowserPlugin:
         self.action_browse_resources.triggered.connect(self.run)
 
         self.action_help = QAction(
-            QIcon(QgsApplication.getThemeIcon("mActionHelpContents.svg")),
+            QgsApplication.getThemeIcon("mActionHelpContents.svg"),
             self.tr("Documentation"),
             self.iface.mainWindow(),
         )
