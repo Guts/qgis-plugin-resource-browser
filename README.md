@@ -10,6 +10,8 @@ Helper plugin for developers to browse, preview and get the embedded icons in QG
 
 This plugin is a companion of the website [PyQGIS Icons Cheatsheet](https://pyqgis-icons-cheatsheet.geotribu.fr/) made and published by [Julien Moura](https://github.com/guts/) on [Geotribu](http://geotribu.fr/).
 
+[demo_qgis_plugin_resource_browser.webm](https://user-images.githubusercontent.com/1596222/232868878-1134695b-5dd8-405e-96af-00a2856d4535.webm)
+
 Interested? Go [read the documentation](https://guts.github.io/qgis-plugin-resource-browser/).
 
 ----
