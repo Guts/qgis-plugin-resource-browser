@@ -145,26 +145,28 @@ class ResourceGraphicsView(QGraphicsView):
             self.log(message=f"Text copied: {Path(self.uri).name}", log_level=4)
             return Path(self.uri).name
         if expected_format.lower() == "path":
-            QApplication.clipboard().setText(str(Path(self.uri).resolve()))
-            self.log(message=f"Text copied: {Path(self.uri).resolve()}", log_level=4)
-            return Path(self.uri).resolve()
-        if expected_format.lower() == "getThemeIcon":
+            QApplication.clipboard().setText(self.uri)
+            self.log(message=f"Text copied: {self.uri}", log_level=4)
+            return self.uri
+        if expected_format.lower() == "getthemeicon":
             QApplication.clipboard().setText(
-                f"QgsApplication.getThemeIcon('{self.uri}')"
+                f"QgsApplication.getThemeIcon('{Path(self.uri).name}')"
             )
             self.log(
-                message=f"Text copied: QgsApplication.getThemeIcon('{self.uri}')",
+                message=f"Text copied: QgsApplication.getThemeIcon('{Path(self.uri).name}')",
                 log_level=4,
             )
             return f"QgsApplication.getThemeIcon('{self.uri}')"
         if expected_format.lower() == "qpixmap":
-            QApplication.clipboard().setText(f"QIcon('{self.uri}')")
-            self.log(message=f"Text copied: QIcon('{self.uri}')", log_level=4)
-            return f"QIcon('{self.uri}')"
+            QApplication.clipboard().setText(f"QPixmap('{self.uri}')")
+            self.log(message=f"Text copied: QPixmap('{self.uri}')", log_level=4)
+            return f"QPixmap('{self.uri}')"
         if expected_format.lower() == "qicon":
             QApplication.clipboard().setText(f"QIcon('{self.uri}')")
             self.log(message=f"Text copied: QIcon('{self.uri}')", log_level=4)
             return f"QIcon('{self.uri}')"
+
+        self.log(message=f"Undefined format: {expected_format}", push=True, log_level=1)
 
 
 class ResourceBrowser(QWidget):
