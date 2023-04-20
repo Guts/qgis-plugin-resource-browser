@@ -154,3 +154,9 @@ jobs:
           --github-token ${{ secrets.GITHUB_TOKEN }}
           --osgeo-username ${{ secrets.OSGEO_USER }}
           --osgeo-password ${{ secrets.OSGEO_PASSWORD }}
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.PROJECT_FOLDER }}-${GITHUB_REF/refs\/tags\//}
+          path: ${{ env.PROJECT_FOLDER }}.*.zip
+          if-no-files-found: error
