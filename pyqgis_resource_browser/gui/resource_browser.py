@@ -1,13 +1,14 @@
 # standard lib
 import os
-import pathlib
 import re
 from functools import partial
+from pathlib import Path
+from typing import Literal, Union
 
 from qgis.core import QgsApplication
 from qgis.PyQt import uic
 from qgis.PyQt.QtCore import QFile, QModelIndex, QRegExp, Qt, QTextStream, pyqtSignal
-from qgis.PyQt.QtGui import QPixmap
+from qgis.PyQt.QtGui import QContextMenuEvent, QPixmap
 from qgis.PyQt.QtSvg import QGraphicsSvgItem
 from qgis.PyQt.QtWidgets import (
     QAction,
@@ -17,6 +18,7 @@ from qgis.PyQt.QtWidgets import (
     QGraphicsView,
     QLabel,
     QLineEdit,
+    QMenu,
     QTextBrowser,
     QToolButton,
     QWidget,
@@ -27,20 +29,29 @@ from qgis.utils import iface
 
 # plugin
 from pyqgis_resource_browser.__about__ import __title__
-
-from ..core.resource_table_model import ResourceTableFilterModel, ResourceTableModel
-from ..core.resource_table_view import ResourceTableView
-from ..toolbelt import PlgOptionsManager
+from pyqgis_resource_browser.core.resource_table_model import (
+    ResourceTableFilterModel,
+    ResourceTableModel,
+)
+from pyqgis_resource_browser.core.resource_table_view import ResourceTableView
+from pyqgis_resource_browser.toolbelt import PlgLogger, PlgOptionsManager
 
 
 class ResourceGraphicsView(QGraphicsView):
     resized = pyqtSignal()
+    uri: str = ""
 
     def __init__(self, *args, **kwds):
         super().__init__(*args, **kwds)
+        self.log = PlgLogger().log
         self.item = None
 
-    def setItem(self, item):
+    def setItem(self, item: Union[QGraphicsSvgItem, QGraphicsPixmapItem]):
+        """Set view item.
+
+        :param item: _description_
+        :type item: Union[QGraphicsSvgItem, QGraphicsPixmapItem]
+        """
         self.scene().clear()
         self.scene().addItem(item)
         self.item = item
@@ -49,6 +60,113 @@ class ResourceGraphicsView(QGraphicsView):
     def resizeEvent(self, QResizeEvent):
         if self.item:
             self.fitInView(self.item, Qt.KeepAspectRatio)
+
+    def contextMenuEvent(self, event: QContextMenuEvent):
+        """Custom menu displayed on righ-click event on widget view.
+
+        :param event: event that triggers the context-menu, typically right-click
+        :type event: QContextMenuEvent
+        """
+        menu = QMenu(parent=self)
+
+        # Copy image name
+        action_copy_name = QAction(
+            icon=QgsApplication.getThemeIcon("mIconLabelQuadrantOffset.svg"),
+            text=self.tr("Copy name"),
+            parent=self,
+        )
+        action_copy_name.triggered.connect(partial(self.copy_to_clipboard, "name"))
+
+        # Copy image path
+        action_copy_path = QAction(
+            icon=QgsApplication.getThemeIcon("mIconFileLink.svg"),
+            text=self.tr("Copy path"),
+            parent=self,
+        )
+        action_copy_path.triggered.connect(partial(self.copy_to_clipboard, "path"))
+
+        # Copy as getThemeIcon syntax
+        action_copy_theme_icon = QAction(
+            icon=QgsApplication.getThemeIcon("mActionEditInsertImage.svg"),
+            text=self.tr("Copy as getThemeIcon syntax"),
+            parent=self,
+        )
+        action_copy_theme_icon.triggered.connect(
+            partial(self.copy_to_clipboard, "getThemeIcon")
+        )
+
+        # Copy as QIcon syntax
+        action_copy_qicon = QAction(
+            icon=QgsApplication.getThemeIcon("mActionEditCopy.svg"),
+            text=self.tr("Copy as QIcon syntax"),
+            parent=self,
+        )
+        action_copy_qicon.triggered.connect(partial(self.copy_to_clipboard, "qicon"))
+
+        # Copy as QPixmap syntax
+        action_copy_qpixmap = QAction(
+            icon=QgsApplication.getThemeIcon("mIconColorPicker.svg"),
+            text=self.tr("Copy as QPixmap syntax"),
+            parent=self,
+        )
+        action_copy_qpixmap.triggered.connect(
+            partial(self.copy_to_clipboard, "qpixmap")
+        )
+
+        # add actions to context menu
+        menu.addAction(action_copy_name)
+        menu.addAction(action_copy_path)
+        menu.addSeparator()
+        menu.addAction(action_copy_theme_icon)
+        menu.addAction(action_copy_qicon)
+        menu.addAction(action_copy_qpixmap)
+
+        # open the menu at the event global position
+        menu.exec_(event.globalPos())
+
+    def copy_to_clipboard(
+        self,
+        expected_format: Literal["getThemeIcon", "name", "path", "qicon", "qpixmap"],
+    ) -> str:
+        """Copy item uri to system clipboard in an expected format.
+
+        :param expected_format: expected format
+        :type expected_format: Literal[&quot;name&quot;, &quot;path&quot;, &quot;qicon&quot;, &quot;qpixmap&quot;]
+
+        :return: formatted uri in the expected format
+        :rtype: str
+        """
+        self.log(
+            message=f"DEBUG - Copy to clipboard {self.uri} in {expected_format} format.",
+            log_level=4,
+        )
+        if expected_format.lower() == "name":
+            QApplication.clipboard().setText(Path(self.uri).name)
+            self.log(message=f"Text copied: {Path(self.uri).name}", log_level=4)
+            return Path(self.uri).name
+        if expected_format.lower() == "path":
+            QApplication.clipboard().setText(self.uri)
+            self.log(message=f"Text copied: {self.uri}", log_level=4)
+            return self.uri
+        if expected_format.lower() == "getthemeicon":
+            QApplication.clipboard().setText(
+                f"QgsApplication.getThemeIcon('{Path(self.uri).name}')"
+            )
+            self.log(
+                message=f"Text copied: QgsApplication.getThemeIcon('{Path(self.uri).name}')",
+                log_level=4,
+            )
+            return f"QgsApplication.getThemeIcon('{self.uri}')"
+        if expected_format.lower() == "qpixmap":
+            QApplication.clipboard().setText(f"QPixmap('{self.uri}')")
+            self.log(message=f"Text copied: QPixmap('{self.uri}')", log_level=4)
+            return f"QPixmap('{self.uri}')"
+        if expected_format.lower() == "qicon":
+            QApplication.clipboard().setText(f"QIcon('{self.uri}')")
+            self.log(message=f"Text copied: QIcon('{self.uri}')", log_level=4)
+            return f"QIcon('{self.uri}')"
+
+        self.log(message=f"Undefined format: {expected_format}", push=True, log_level=1)
 
 
 class ResourceBrowser(QWidget):
@@ -59,7 +177,7 @@ class ResourceBrowser(QWidget):
     def __init__(self, *args, **kwds):
         super().__init__(*args, **kwds)
 
-        pathUi = pathlib.Path(__file__).parent / "resource_browser.ui"
+        pathUi = Path(__file__).parent / "resource_browser.ui"
         with open(pathUi.as_posix()) as uifile:
             uic.loadUi(uifile, baseinstance=self)
 
@@ -183,6 +301,7 @@ class ResourceBrowser(QWidget):
             if item:
                 hasImage = True
                 self.graphicsView.setItem(item)
+                self.graphicsView.uri = uri
 
             if re.search(r"\.(svg|html|xml|txt|js|css)$", uri, re.I) is not None:
                 file = QFile(uri)
