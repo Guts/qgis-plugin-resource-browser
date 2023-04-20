@@ -18,18 +18,18 @@ class ResourceTableView(QTableView):
         if isinstance(idx, QModelIndex) and idx.isValid():
             uri = idx.data(Qt.UserRole)
             m = QMenu()
-            a = m.addAction("Copy Name")
+            a = m.addAction(self.tr("Copy name"))
             a.triggered.connect(
                 lambda *args, n=os.path.basename(uri): QApplication.clipboard().setText(
                     n
                 )
             )
-            a = m.addAction("Copy Path")
+            a = m.addAction(self.tr("Copy path"))
             a.triggered.connect(
                 lambda *args, n=uri: QApplication.clipboard().setText(n)
             )
 
-            a = m.addAction("Copy Icon")
+            a = m.addAction(self.tr("Copy icon"))
             a.triggered.connect(
                 lambda *args, n=uri: QApplication.clipboard().setPixmap(QPixmap(n))
             )
