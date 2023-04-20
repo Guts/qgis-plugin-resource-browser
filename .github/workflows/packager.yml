@@ -102,10 +102,6 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
 
     steps:
-      - name: Get tag name as version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -135,7 +131,7 @@ jobs:
           # git add full project
           git add ${{ env.PROJECT_FOLDER }}/
 
-      - name: Get current changelog for ${VERSION}
+      - name: Get current changelog
         run: qgis-plugin-ci changelog ${GITHUB_REF/refs\/tags\//} >> release.md
 
       - name: Create GitHub Release
@@ -154,3 +150,9 @@ jobs:
           --github-token ${{ secrets.GITHUB_TOKEN }}
           --osgeo-username ${{ secrets.OSGEO_USER }}
           --osgeo-password ${{ secrets.OSGEO_PASSWORD }}
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.PROJECT_FOLDER }}-${GITHUB_REF/refs\/tags\//}
+          path: ${{ env.PROJECT_FOLDER }}.*.zip
+          if-no-files-found: error
