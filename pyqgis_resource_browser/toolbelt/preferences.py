@@ -45,6 +45,9 @@ class PlgSettingsStructure:
         default_factory=lambda: ["ico", "png", "svg", "xpn"]
     )
 
+    # misc
+    toolbar_browser_shortcut: bool = True
+
 
 class PlgOptionsManager:
     """Class to deal with settings: get, set."""

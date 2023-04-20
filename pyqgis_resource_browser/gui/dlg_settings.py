@@ -83,6 +83,9 @@ class ConfigOptionsPage(FORM_CLASS, QgsOptionsPageWidget):
 
         # misc
         settings.debug_mode = self.opt_debug.isChecked()
+        settings.toolbar_browser_shortcut = (
+            self.opt_toolbar_browser_shortcut.isChecked()
+        )
         settings.version = __version__
 
         prefix_filters = self.te_resource_prefixes.toPlainText().strip().split("\n")
@@ -108,6 +111,7 @@ class ConfigOptionsPage(FORM_CLASS, QgsOptionsPageWidget):
 
         # global
         self.opt_debug.setChecked(settings.debug_mode)
+        self.opt_toolbar_browser_shortcut.setChecked(settings.toolbar_browser_shortcut)
         self.lbl_version_saved_value.setText(settings.version)
 
         self.gb_filter_resourceprefix.setChecked(settings.filter_prefixes)

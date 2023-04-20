@@ -112,9 +112,10 @@ class ResourceBrowser(QWidget):
             partial(iface.showOptionsDialog, currentPage=f"mOptionsPage{__title__}")
         )
 
-        self.reloadConfig()
+        self.slot_config_changed()
 
-    def reloadConfig(self):
+    def slot_config_changed(self):
+        """When settings have been saved."""
         settings = PlgOptionsManager.get_plg_settings()
         if settings.filter_prefixes:
             self.resourceProxyModel.setPrefixFilters(settings.prefix_filters)

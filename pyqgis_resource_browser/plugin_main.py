@@ -8,9 +8,10 @@
 from functools import partial
 from pathlib import Path
 
-# PyQGIS
 from qgis.core import QgsApplication, QgsSettings
 from qgis.gui import QgisInterface
+
+# PyQGIS
 from qgis.PyQt.QtCore import QCoreApplication, QLocale, QTranslator, QUrl
 from qgis.PyQt.QtGui import QDesktopServices, QIcon
 from qgis.PyQt.QtWidgets import QAction
@@ -25,7 +26,7 @@ from pyqgis_resource_browser.__about__ import (
 )
 from pyqgis_resource_browser.gui.dlg_settings import PlgOptionsFactory
 from pyqgis_resource_browser.gui.resource_browser import ResourceBrowser
-from pyqgis_resource_browser.toolbelt import PlgLogger
+from pyqgis_resource_browser.toolbelt import PlgLogger, PlgOptionsManager
 
 # ############################################################################
 # ########## Classes ###############
@@ -40,15 +41,18 @@ class PlgPyQgisResourceBrowserPlugin:
         provides the hook by which you can manipulate the QGIS application at run time.
         :type iface: QgsInterface
         """
+        # set attributes
+        self.action_browse_resources = None
+        self.action_help = None
         self.action_help_plugin_menu_cheatsheet = None
         self.action_help_plugin_menu_documentation = None
         self.action_settings = None
-        self.action_browse_resources = None
+        self.action_toolbar = None
+        self.browser: ResourceBrowser = None
         self.options_factory: PlgOptionsFactory = None
-        self.action_help = None
         self.iface = iface
         self.log = PlgLogger().log
-        self.browser: ResourceBrowser = None
+        self.plg_settings = PlgOptionsManager()
 
         # initialize the locale
         self.locale: str = QgsSettings().value("locale/userLocale", QLocale().name())[
@@ -65,6 +69,7 @@ class PlgPyQgisResourceBrowserPlugin:
 
     def initGui(self):
         """Set up plugin UI elements."""
+        settings = self.plg_settings.get_plg_settings()
 
         # settings page within the QGIS preferences menu
         if not self.options_factory:
@@ -102,6 +107,11 @@ class PlgPyQgisResourceBrowserPlugin:
         self.iface.addPluginToMenu(__title__, self.action_settings)
         self.iface.addPluginToMenu(__title__, self.action_help)
 
+        # -- Toolbar
+        if settings.toolbar_browser_shortcut and not self.action_toolbar:
+            self.action_toolbar = self.action_browse_resources
+            self.iface.addToolBarIcon(self.action_toolbar)
+
         # -- Help menu
 
         # documentation
@@ -131,6 +141,26 @@ class PlgPyQgisResourceBrowserPlugin:
 
         self.iface.pluginHelpMenu().addAction(self.action_help_plugin_menu_cheatsheet)
 
+    def slot_config_changed(self):
+        """When settings have been saved."""
+        settings = self.plg_settings.get_plg_settings()
+
+        # toolbar icon or not
+        if settings.toolbar_browser_shortcut and not self.action_toolbar:
+            self.action_toolbar = self.action_browse_resources
+            self.iface.addToolBarIcon(self.action_toolbar)
+            self.log(
+                message="DEBUG - Config changed: toolbar shortcut has been enabled.",
+                log_level=4,
+            )
+        elif not settings.toolbar_browser_shortcut and self.action_toolbar:
+            self.iface.removeToolBarIcon(self.action_toolbar)
+            self.action_toolbar = None
+            self.log(
+                message="DEBUG - Config changed: toolbar shortcut has been removed.",
+                log_level=4,
+            )
+
     def tr(self, message: str) -> str:
         """Get the translation for a string using Qt translation API.
 
@@ -157,6 +187,11 @@ class PlgPyQgisResourceBrowserPlugin:
             self.action_help_plugin_menu_cheatsheet
         )
 
+        # -- Clean up toolbar
+        if self.action_toolbar:
+            self.iface.removeToolBarIcon(self.action_toolbar)
+            self.action_toolbar = None
+
         # -- Clean up preferences panel in QGIS settings
         self.iface.unregisterOptionsWidgetFactory(self.options_factory)
 
@@ -173,20 +208,21 @@ class PlgPyQgisResourceBrowserPlugin:
         try:
             if not isinstance(self.browser, ResourceBrowser):
                 self.browser = ResourceBrowser()
-                self.options_factory.configChanged.connect(self.browser.reloadConfig)
+                self.options_factory.configChanged.connect(
+                    self.browser.slot_config_changed
+                )
+                self.options_factory.configChanged.connect(self.slot_config_changed)
             self.browser.show()
             self.log(
-                message=self.tr(
-                    message="Everything ran OK.",
-                ),
+                message="Everything ran OK.",
                 log_level=3,
                 push=False,
             )
         except Exception as err:
             self.log(
-                message=self.tr(
-                    message=f"Houston, we've got a problem: {err}",
-                ),
+                message=f"Houston, we've got a problem: {err}",
                 log_level=2,
                 push=True,
+                duration=60,
+                button=True,
             )
