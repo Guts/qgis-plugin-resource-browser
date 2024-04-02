@@ -135,7 +135,7 @@ jobs:
         run: qgis-plugin-ci changelog ${GITHUB_REF/refs\/tags\//} >> release.md
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           fail_on_unmatched_files: true
           body_path: release.md
