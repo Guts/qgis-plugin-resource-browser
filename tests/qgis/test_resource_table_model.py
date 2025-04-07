@@ -1,14 +1,14 @@
 #! python3  # noqa E265
 
 """
-    Usage from the repo root folder:
+Usage from the repo root folder:
 
-    .. code-block:: bash
+.. code-block:: bash
 
-        # for whole tests
-        python -m unittest tests.qgis.test_resource_table_model
-        # for specific test
-        python -m unittest tests.qgis.test_resource_table_model.TestResourceTableModel.test_resource_table_model
+    # for whole tests
+    python -m unittest tests.qgis.test_resource_table_model
+    # for specific test
+    python -m unittest tests.qgis.test_resource_table_model.TestResourceTableModel.test_resource_table_model
 """
 
 # standard library
