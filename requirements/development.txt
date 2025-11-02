@@ -3,6 +3,6 @@
 
 black
 flake8-builtins>=2,<4
-flake8-isort>=4,<7
+flake8-isort>=4,<8
 flake8-qgis>=1,<2
 pre-commit>=3,<5
