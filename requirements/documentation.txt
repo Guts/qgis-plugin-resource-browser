@@ -1,7 +1,7 @@
 # Documentation (for devs)
 # -----------------------
 
-myst-parser[linkify]>=4
+myst-parser[linkify]>=3
 sphinx-autobuild>=2024
 sphinx-copybutton>=0.5
 sphinx-rtd-theme>=3
