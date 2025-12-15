@@ -1,5 +1,2 @@
-# Testing dependencies
-# --------------------
-
-pytest-cov>=5
-packaging>=23
+packaging>=24.2
+pytest-cov>=6.1.1
