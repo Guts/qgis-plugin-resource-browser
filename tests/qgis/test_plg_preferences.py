@@ -10,6 +10,7 @@ Usage from the repo root folder:
     # for specific test
     python -m unittest tests.qgis.test_plg_preferences.TestPlgPreferences.test_plg_preferences_structure
 """
+
 from PyQt5.QtGui import QIcon
 from qgis.gui import QgsOptionsDialogBase
 from qgis.PyQt.Qt import Qt
