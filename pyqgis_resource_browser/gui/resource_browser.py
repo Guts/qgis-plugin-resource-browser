@@ -3,7 +3,7 @@ import os
 import re
 from functools import partial
 from pathlib import Path
-from typing import Literal, Union
+from typing import Literal
 
 from qgis.core import QgsApplication
 from qgis.PyQt import uic
@@ -46,7 +46,7 @@ class ResourceGraphicsView(QGraphicsView):
         self.log = PlgLogger().log
         self.item = None
 
-    def setItem(self, item: Union[QGraphicsSvgItem, QGraphicsPixmapItem]):
+    def setItem(self, item: QGraphicsSvgItem | QGraphicsPixmapItem):
         """Set view item.
 
         :param item: _description_

@@ -2,8 +2,8 @@
 
 # standard library
 import logging
+from collections.abc import Callable
 from functools import partial
-from typing import Callable
 
 # PyQGIS
 from qgis.core import QgsMessageLog, QgsMessageOutput

@@ -1,50 +1,66 @@
-exclude: ".venv|__pycache__|tests/dev/|tests/fixtures/"
-
+exclude: ".venv|tests/dev/|tests/fixtures/"
+fail_fast: false
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
       - id: check-added-large-files
-        args: ["--maxkb=500"]
+        args:
+          - --maxkb=500
       - id: check-case-conflict
+      - id: check-illegal-windows-names
       - id: check-xml
       - id: check-yaml
       - id: detect-private-key
       - id: end-of-file-fixer
       - id: fix-byte-order-marker
       - id: trailing-whitespace
-        args: [--markdown-linebreak-ext=md]
+        args:
+          - --markdown-linebreak-ext=md
 
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: "v0.15.15"
+    hooks:
+      - id: ruff-check
+        args:
+          - --fix
+          - --target-version=py310
+        types_or:
+          - python
+          - pyi
+      - id: ruff-format
+        args:
+          - --line-length=88
+          - --target-version=py310
+        types_or:
+          - python
+          - pyi
+
+  # Disabled until PyQt translation support f-strings
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.21.2
     hooks:
       - id: pyupgrade
         args:
-          - "--py39-plus"
-
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.15.9"
-    hooks:
-      - id: ruff
-        args: ["--fix-only"]
-
-  - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 26.3.1
-    hooks:
-      - id: black
+          - "--py310-plus"
 
   - repo: https://github.com/pycqa/isort
-    rev: 8.0.1
+    rev: 9.0.0a3
     hooks:
       - id: isort
-        args: ["--profile", "black", "--filter-files"]
+        args:
+          - --profile
+          - black
+          - --filter-files
 
   - repo: https://github.com/pycqa/flake8
     rev: 7.3.0
     hooks:
       - id: flake8
+        language: python
         files: ^pyqgis_resource_browser/.*\.py$
-        additional_dependencies: ["flake8-qgis<2"]
+        additional_dependencies:
+          - "flake8-qgis"
         args:
           [
             "--config=setup.cfg",
@@ -52,6 +68,5 @@ repos:
           ]
 
 ci:
+  autofix_prs: true
   autoupdate_schedule: quarterly
-  skip: []
-  submodules: false
