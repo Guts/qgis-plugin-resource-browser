@@ -6,14 +6,11 @@ Plugin settings form integrated into QGIS 'Options' menu.
 
 # standard
 from functools import partial
-from pathlib import Path
 
 # PyQGIS
 from qgis.core import QgsApplication
 from qgis.gui import QgsOptionsPageWidget, QgsOptionsWidgetFactory
-from qgis.PyQt import uic
-from qgis.PyQt.Qt import QUrl
-from qgis.PyQt.QtCore import pyqtSignal
+from qgis.PyQt.QtCore import QUrl, pyqtSignal
 from qgis.PyQt.QtGui import QDesktopServices, QIcon
 
 # project
@@ -28,18 +25,11 @@ from pyqgis_resource_browser.toolbelt import PlgLogger, PlgOptionsManager
 from pyqgis_resource_browser.toolbelt.preferences import PlgSettingsStructure
 
 # ############################################################################
-# ########## Globals ###############
-# ##################################
-
-FORM_CLASS, _ = uic.loadUiType(Path(__file__).parent / f"{Path(__file__).stem}.ui")
-
-
-# ############################################################################
 # ########## Classes ###############
 # ##################################
 
 
-class ConfigOptionsPage(FORM_CLASS, QgsOptionsPageWidget):
+class ConfigOptionsPage(QgsOptionsPageWidget):
     """Settings form embedded into QGIS 'options' menu."""
 
     configChanged = pyqtSignal()

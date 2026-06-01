@@ -55,11 +55,11 @@ class ResourceGraphicsView(QGraphicsView):
         self.scene().clear()
         self.scene().addItem(item)
         self.item = item
-        self.fitInView(item, Qt.KeepAspectRatio)
+        self.fitInView(item, Qt.AspectRatioMode.KeepAspectRatio)
 
     def resizeEvent(self, QResizeEvent):
         if self.item:
-            self.fitInView(self.item, Qt.KeepAspectRatio)
+            self.fitInView(self.item, Qt.AspectRatioMode.KeepAspectRatio)
 
     def contextMenuEvent(self, event: QContextMenuEvent):
         """Custom menu displayed on righ-click event on widget view.
@@ -122,7 +122,7 @@ class ResourceGraphicsView(QGraphicsView):
         menu.addAction(action_copy_qpixmap)
 
         # open the menu at the event global position
-        menu.exec_(event.globalPos())
+        menu.exec(event.globalPos())
 
     def copy_to_clipboard(
         self,
@@ -203,7 +203,7 @@ class ResourceBrowser(QWidget):
         self.resourceProxyModel = ResourceTableFilterModel()
         self.resourceProxyModel.setSourceModel(self.resourceModel)
         self.resourceProxyModel.setFilterKeyColumn(0)
-        self.resourceProxyModel.setFilterRole(Qt.UserRole)
+        self.resourceProxyModel.setFilterRole(Qt.ItemDataRole.UserRole)
 
         self.tableView.setSortingEnabled(True)
         self.tableView.setModel(self.resourceProxyModel)
@@ -256,9 +256,9 @@ class ResourceBrowser(QWidget):
             expr.setPatternSyntax(QRegExp.Wildcard)
 
         if self.optionCaseSensitive.isChecked():
-            expr.setCaseSensitivity(Qt.CaseSensitive)
+            expr.setCaseSensitivity(Qt.CaseSensitivity.CaseSensitive)
         else:
-            expr.setCaseSensitivity(Qt.CaseInsensitive)
+            expr.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
 
         if expr.isValid():
             self.resourceProxyModel.setFilterRegExp(expr)
@@ -275,7 +275,7 @@ class ResourceBrowser(QWidget):
             idx1 = selectedIdx[0]
             assert isinstance(idx1, QModelIndex)
 
-            uri = idx1.data(Qt.UserRole)
+            uri = idx1.data(Qt.ItemDataRole.UserRole)
             self.updatePreview(uri)
 
     def updatePreview(self, uri: str):
@@ -305,7 +305,7 @@ class ResourceBrowser(QWidget):
 
             if re.search(r"\.(svg|html|xml|txt|js|css)$", uri, re.I) is not None:
                 file = QFile(uri)
-                if file.open(QFile.ReadOnly | QFile.Text):
+                if file.open(QFile.OpenModeFlag.ReadOnly | QFile.OpenModeFlag.Text):
                     stream = QTextStream(file)
                     stream.setAutoDetectUnicode(True)
                     txt = stream.readAll()
@@ -339,5 +339,5 @@ def showResources() -> ResourceBrowser:
     browser = ResourceBrowser()
     browser.show()
     if needQApp:
-        QApplication.instance().exec_()
+        QApplication.instance().exec()
     return browser

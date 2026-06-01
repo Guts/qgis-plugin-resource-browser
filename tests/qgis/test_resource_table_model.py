@@ -11,10 +11,8 @@ Usage from the repo root folder:
     python -m unittest tests.qgis.test_resource_table_model.TestResourceTableModel.test_resource_table_model
 """
 
-# standard library
-# import unittest
-
-from qgis.PyQt.Qt import Qt
+# PyQGIS
+from qgis.PyQt.QtCore import Qt
 from qgis.testing import unittest
 
 from pyqgis_resource_browser.core.resource_table_model import (
@@ -43,14 +41,14 @@ class TestResourceTableModel(unittest.TestCase):
         fm.setFileTypeFilters(["svg"])
         self.assertTrue(fm.rowCount() < n)
         for row in range(fm.rowCount()):
-            uri = fm.index(row, 0).data(Qt.UserRole)
+            uri = fm.index(row, 0).data(Qt.ItemDataRole.UserRole)
             self.assertIsInstance(uri, str)
             self.assertTrue(uri.endswith("svg"))
 
         fm.setFileTypeFilters([])
         fm.setPrefixFilters([":/images/"])
         for row in range(fm.rowCount()):
-            uri = fm.index(row, 0).data(Qt.UserRole)
+            uri = fm.index(row, 0).data(Qt.ItemDataRole.UserRole)
             self.assertTrue(uri.startswith(":/images/"))
 
 
