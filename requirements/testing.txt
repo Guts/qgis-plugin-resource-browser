@@ -1,2 +1,2 @@
 packaging>=24.2
-pytest-cov>=6.1.1
+pytest-cov>=7.1.0
