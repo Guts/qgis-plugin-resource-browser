@@ -16,7 +16,12 @@ from qgis.PyQt.QtCore import (
     pyqtSignal,
 )
 from qgis.PyQt.QtGui import QContextMenuEvent, QPixmap
-from qgis.PyQt.QtSvg import QGraphicsSvgItem
+
+try:
+    from PyQt6.QtSvgWidgets import QGraphicsSvgItem  # noqa: QGS103
+except ImportError:
+    from qgis.PyQt.QtSvg import QGraphicsSvgItem
+
 from qgis.PyQt.QtWidgets import (
     QAction,
     QApplication,
