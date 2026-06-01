@@ -2,18 +2,20 @@ name: "✅ Linter"
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
       - "**.py"
 
   pull_request:
-    branches: [main]
+    branches:
+      - main
     paths:
       - "**.py"
 
 env:
   PROJECT_FOLDER: "pyqgis_resource_browser"
-  PYTHON_VERSION: 3.9
+  PYTHON_VERSION: "3.10"
 
 jobs:
   lint-py:
