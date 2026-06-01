@@ -7,7 +7,14 @@ from typing import Literal
 
 from qgis.core import QgsApplication
 from qgis.PyQt import uic
-from qgis.PyQt.QtCore import QFile, QModelIndex, QRegExp, Qt, QTextStream, pyqtSignal
+from qgis.PyQt.QtCore import (
+    QFile,
+    QModelIndex,
+    QRegularExpression,
+    Qt,
+    QTextStream,
+    pyqtSignal,
+)
 from qgis.PyQt.QtGui import QContextMenuEvent, QPixmap
 from qgis.PyQt.QtSvg import QGraphicsSvgItem
 from qgis.PyQt.QtWidgets import (
@@ -248,23 +255,23 @@ class ResourceBrowser(QWidget):
     def updateFilter(self):
         txt = self.tbFilter.text()
 
-        expr = QRegExp(txt)
+        if not self.optionUseRegex.isChecked():
+            txt = QRegularExpression.wildcardToRegularExpression(
+                txt,
+                QRegularExpression.WildcardConversionOption.UnanchoredWildcardConversion,
+            )
 
-        if self.optionUseRegex.isChecked():
-            expr.setPatternSyntax(QRegExp.RegExp)
-        else:
-            expr.setPatternSyntax(QRegExp.Wildcard)
-
-        if self.optionCaseSensitive.isChecked():
-            expr.setCaseSensitivity(Qt.CaseSensitivity.CaseSensitive)
-        else:
-            expr.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        expr = QRegularExpression(txt)
+        if not self.optionCaseSensitive.isChecked():
+            expr.setPatternOptions(
+                QRegularExpression.PatternOption.CaseInsensitiveOption
+            )
 
         if expr.isValid():
-            self.resourceProxyModel.setFilterRegExp(expr)
+            self.resourceProxyModel.setFilterRegularExpression(expr)
             self.info.setText("")
         else:
-            self.resourceProxyModel.setFilterRegExp(None)
+            self.resourceProxyModel.setFilterRegularExpression(QRegularExpression())
             self.info.setText(expr.errorString())
 
     def onSelectionChanged(self, selected, deselected):
