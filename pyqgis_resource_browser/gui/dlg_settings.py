@@ -6,10 +6,12 @@ Plugin settings form integrated into QGIS 'Options' menu.
 
 # standard
 from functools import partial
+from pathlib import Path
 
 # PyQGIS
 from qgis.core import QgsApplication
 from qgis.gui import QgsOptionsPageWidget, QgsOptionsWidgetFactory
+from qgis.PyQt import uic
 from qgis.PyQt.QtCore import QUrl, pyqtSignal
 from qgis.PyQt.QtGui import QDesktopServices, QIcon
 
@@ -40,8 +42,12 @@ class ConfigOptionsPage(QgsOptionsPageWidget):
         self.plg_settings = PlgOptionsManager()
 
         # load UI and set objectName
-        self.setupUi(self)
+        uic.loadUi(Path(__file__).parent / f"{Path(__file__).stem}.ui", self)
         self.setObjectName(f"mOptionsPage{__title__}")
+        self.initGui()
+
+    def initGui(self) -> None:  # noqa: N802
+        """Set up UI elements."""
 
         # header
         self.lbl_title.setText(f"{__title__} - Version {__version__}")
