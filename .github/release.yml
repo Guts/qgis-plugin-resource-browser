@@ -10,13 +10,15 @@ changelog:
     - title: Features and enhancements 🎉
       labels:
         - enhancement
+        - quality
         - UI
-    - title: Tooling 🔧
-      labels:
-        - ci-cd
     - title: Documentation 📖
       labels:
         - documentation
+    - title: Tooling 🔧
+      labels:
+        - ci-cd
+        - tooling
     - title: Other Changes
       labels:
         - "*"
