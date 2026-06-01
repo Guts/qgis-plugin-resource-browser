@@ -16,6 +16,12 @@ Unreleased
 
 -->
 
+## 1.0.0 - 2026-06-01
+
+* chore(qgis): make plugin compatible with Qt6 by @Guts in <https://github.com/Guts/qgis-plugin-resource-browser/pull/90>
+* chore(python): bump Python minimal version to 3.10 by @Guts in <https://github.com/Guts/qgis-plugin-resource-browser/pull/89>
+* add(docs): publish plugin on custom repository by @Guts in <https://github.com/Guts/qgis-plugin-resource-browser/pull/92>
+
 ## 0.3.0 - 2023-04-20
 
 * Add option to enable/disable a toolbar icon by @Guts in <https://github.com/Guts/qgis-plugin-resource-browser/pull/25>
