@@ -3,7 +3,7 @@ name: "📚 Documentation Builder"
 env:
   CONDITION_IS_PUSH: ${{ github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main') }}
   CONDITION_IS_WORKFLOW_RUN: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' }}
-  PROJECT_FOLDER: qtribu
+  PROJECT_FOLDER: pyqgis_resource_browser
   PYTHON_VERSION: 3.12
 
 # Allow one concurrent deployment per branch/pr
