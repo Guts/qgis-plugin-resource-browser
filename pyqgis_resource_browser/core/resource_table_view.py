@@ -16,7 +16,7 @@ class ResourceTableView(QTableView):
     def contextMenuEvent(self, event: QContextMenuEvent) -> None:
         idx = self.indexAt(event.pos())
         if isinstance(idx, QModelIndex) and idx.isValid():
-            uri = idx.data(Qt.UserRole)
+            uri = idx.data(Qt.ItemDataRole.UserRole)
             m = QMenu()
             a = m.addAction(self.tr("Copy name"))
             a.triggered.connect(
@@ -34,6 +34,6 @@ class ResourceTableView(QTableView):
                 lambda *args, n=uri: QApplication.clipboard().setPixmap(QPixmap(n))
             )
 
-            m.exec_(event.globalPos())
+            m.exec(event.globalPos())
 
         pass

@@ -45,7 +45,9 @@ class ResourceTableFilterModel(QSortFilterProxyModel):
     def filterAcceptsRow(self, row: int, parent: QModelIndex) -> bool:
         b = super().filterAcceptsRow(row, parent)
         if b:
-            uri: str = self.sourceModel().index(row, 0, parent).data(Qt.UserRole)
+            uri: str = (
+                self.sourceModel().index(row, 0, parent).data(Qt.ItemDataRole.UserRole)
+            )
             if uri:
                 if len(self.prefix_filters) > 0:
                     if not any(uri.startswith(f) for f in self.prefix_filters):
@@ -116,12 +118,15 @@ class ResourceTableModel(QAbstractTableModel):
     def headerData(
         self, section: int, orientation: Qt.Orientation, role: int = ...
     ) -> Any:
-        if role == Qt.DisplayRole:
-            if orientation == Qt.Horizontal:
+        if role == Qt.ItemDataRole.DisplayRole:
+            if orientation == Qt.Orientation.Horizontal:
                 return self.columnNames()[section]
 
-        if role == Qt.TextAlignmentRole and orientation == Qt.Vertical:
-            return Qt.AlignRight
+        if (
+            role == Qt.ItemDataRole.TextAlignmentRole
+            and orientation == Qt.Orientation.Vertical
+        ):
+            return Qt.AlignmentFlag.AlignRight
 
         return super().headerData(section, orientation, role)
 
@@ -132,20 +137,20 @@ class ResourceTableModel(QAbstractTableModel):
         uri = self.RESOURCES[index.row()]
         cn = self.columnNames()[index.column()]
 
-        if role == Qt.DisplayRole:
+        if role == Qt.ItemDataRole.DisplayRole:
             if cn == self.cnUri:
                 return uri
             else:
                 return os.path.basename(uri)
-        if role == Qt.DecorationRole:
+        if role == Qt.ItemDataRole.DecorationRole:
             if cn == self.cnIcon:
                 return QIcon(uri)
 
-        if role == Qt.ToolTipRole:
+        if role == Qt.ItemDataRole.ToolTipRole:
             if cn == self.cnUri:
                 return uri
 
-        if role == Qt.UserRole:
+        if role == Qt.ItemDataRole.UserRole:
             return uri
 
         return None

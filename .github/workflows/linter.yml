@@ -5,12 +5,14 @@ on:
     branches:
       - main
     paths:
+      - .github/workflows/linter.yml
       - "**.py"
 
   pull_request:
     branches:
       - main
     paths:
+      - .github/workflows/linter.yml
       - "**.py"
 
 env:
@@ -43,3 +45,31 @@ jobs:
           flake8 ${{ env.PROJECT_FOLDER }} --count --select=E9,F63,F7,F82 --show-source --statistics
           # exit-zero treats all errors as warnings.
           flake8 ${{ env.PROJECT_FOLDER }} --count --exit-zero --statistics
+
+  qt6-check:
+    name: PyQt6 6️⃣
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    container:
+      image: ghcr.io/qgis/pyqgis4-checker:main-ubuntu
+
+    steps:
+      - name: Get source code
+        uses: actions/checkout@v6
+
+      - name: Run PyQGIS 4 migration check
+        run: |
+          # write the report into a log file
+          pyqt5_to_pyqt6.py --dry_run --logfile pyqt6_checker.log ${{ env.PROJECT_FOLDER }}/
+          # trigger an exit code if some incompatibility has been spotted
+          pyqt5_to_pyqt6.py ${{ env.PROJECT_FOLDER }}/
+
+      - name: Upload script report if script fails
+        uses: actions/upload-artifact@v7
+        if: ${{ failure() }}
+        with:
+          name: pyqgis4-checker-report
+          path: pyqt6_checker.log
+          retention-days: 7

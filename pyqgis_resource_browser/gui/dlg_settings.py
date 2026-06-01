@@ -12,8 +12,7 @@ from pathlib import Path
 from qgis.core import QgsApplication
 from qgis.gui import QgsOptionsPageWidget, QgsOptionsWidgetFactory
 from qgis.PyQt import uic
-from qgis.PyQt.Qt import QUrl
-from qgis.PyQt.QtCore import pyqtSignal
+from qgis.PyQt.QtCore import QUrl, pyqtSignal
 from qgis.PyQt.QtGui import QDesktopServices, QIcon
 
 # project
@@ -28,18 +27,11 @@ from pyqgis_resource_browser.toolbelt import PlgLogger, PlgOptionsManager
 from pyqgis_resource_browser.toolbelt.preferences import PlgSettingsStructure
 
 # ############################################################################
-# ########## Globals ###############
-# ##################################
-
-FORM_CLASS, _ = uic.loadUiType(Path(__file__).parent / f"{Path(__file__).stem}.ui")
-
-
-# ############################################################################
 # ########## Classes ###############
 # ##################################
 
 
-class ConfigOptionsPage(FORM_CLASS, QgsOptionsPageWidget):
+class ConfigOptionsPage(QgsOptionsPageWidget):
     """Settings form embedded into QGIS 'options' menu."""
 
     configChanged = pyqtSignal()
@@ -50,8 +42,12 @@ class ConfigOptionsPage(FORM_CLASS, QgsOptionsPageWidget):
         self.plg_settings = PlgOptionsManager()
 
         # load UI and set objectName
-        self.setupUi(self)
+        uic.loadUi(Path(__file__).parent / f"{Path(__file__).stem}.ui", self)
         self.setObjectName(f"mOptionsPage{__title__}")
+        self.initGui()
+
+    def initGui(self) -> None:  # noqa: N802
+        """Set up UI elements."""
 
         # header
         self.lbl_title.setText(f"{__title__} - Version {__version__}")

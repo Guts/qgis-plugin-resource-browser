@@ -11,11 +11,10 @@ Usage from the repo root folder:
     python -m unittest tests.qgis.test_plg_preferences.TestPlgPreferences.test_plg_preferences_structure
 """
 
-from PyQt5.QtGui import QIcon
+# PyQGIS
 from qgis.gui import QgsOptionsDialogBase
-from qgis.PyQt.Qt import Qt
-
-# standard library
+from qgis.PyQt.QtCore import Qt
+from qgis.PyQt.QtGui import QIcon
 from qgis.testing import start_app, unittest
 
 # project
@@ -36,7 +35,7 @@ app = start_app()
 class TestOptionsDialog(QgsOptionsDialogBase):
     def __init__(self, parent=None):
         super(QgsOptionsDialogBase, self).__init__(
-            "PROPERTIES", parent, Qt.Dialog, settings=None
+            "PROPERTIES", parent, Qt.WindowType.Dialog, settings=None
         )
         self.initOptionsBase(False, "PROPERTIES")
 

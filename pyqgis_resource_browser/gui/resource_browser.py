@@ -7,9 +7,21 @@ from typing import Literal
 
 from qgis.core import QgsApplication
 from qgis.PyQt import uic
-from qgis.PyQt.QtCore import QFile, QModelIndex, QRegExp, Qt, QTextStream, pyqtSignal
+from qgis.PyQt.QtCore import (
+    QFile,
+    QModelIndex,
+    QRegularExpression,
+    Qt,
+    QTextStream,
+    pyqtSignal,
+)
 from qgis.PyQt.QtGui import QContextMenuEvent, QPixmap
-from qgis.PyQt.QtSvg import QGraphicsSvgItem
+
+try:
+    from PyQt6.QtSvgWidgets import QGraphicsSvgItem  # noqa: QGS103
+except ImportError:
+    from qgis.PyQt.QtSvg import QGraphicsSvgItem
+
 from qgis.PyQt.QtWidgets import (
     QAction,
     QApplication,
@@ -55,11 +67,11 @@ class ResourceGraphicsView(QGraphicsView):
         self.scene().clear()
         self.scene().addItem(item)
         self.item = item
-        self.fitInView(item, Qt.KeepAspectRatio)
+        self.fitInView(item, Qt.AspectRatioMode.KeepAspectRatio)
 
     def resizeEvent(self, QResizeEvent):
         if self.item:
-            self.fitInView(self.item, Qt.KeepAspectRatio)
+            self.fitInView(self.item, Qt.AspectRatioMode.KeepAspectRatio)
 
     def contextMenuEvent(self, event: QContextMenuEvent):
         """Custom menu displayed on righ-click event on widget view.
@@ -122,7 +134,7 @@ class ResourceGraphicsView(QGraphicsView):
         menu.addAction(action_copy_qpixmap)
 
         # open the menu at the event global position
-        menu.exec_(event.globalPos())
+        menu.exec(event.globalPos())
 
     def copy_to_clipboard(
         self,
@@ -203,7 +215,7 @@ class ResourceBrowser(QWidget):
         self.resourceProxyModel = ResourceTableFilterModel()
         self.resourceProxyModel.setSourceModel(self.resourceModel)
         self.resourceProxyModel.setFilterKeyColumn(0)
-        self.resourceProxyModel.setFilterRole(Qt.UserRole)
+        self.resourceProxyModel.setFilterRole(Qt.ItemDataRole.UserRole)
 
         self.tableView.setSortingEnabled(True)
         self.tableView.setModel(self.resourceProxyModel)
@@ -248,23 +260,23 @@ class ResourceBrowser(QWidget):
     def updateFilter(self):
         txt = self.tbFilter.text()
 
-        expr = QRegExp(txt)
+        if not self.optionUseRegex.isChecked():
+            txt = QRegularExpression.wildcardToRegularExpression(
+                txt,
+                QRegularExpression.WildcardConversionOption.UnanchoredWildcardConversion,
+            )
 
-        if self.optionUseRegex.isChecked():
-            expr.setPatternSyntax(QRegExp.RegExp)
-        else:
-            expr.setPatternSyntax(QRegExp.Wildcard)
-
-        if self.optionCaseSensitive.isChecked():
-            expr.setCaseSensitivity(Qt.CaseSensitive)
-        else:
-            expr.setCaseSensitivity(Qt.CaseInsensitive)
+        expr = QRegularExpression(txt)
+        if not self.optionCaseSensitive.isChecked():
+            expr.setPatternOptions(
+                QRegularExpression.PatternOption.CaseInsensitiveOption
+            )
 
         if expr.isValid():
-            self.resourceProxyModel.setFilterRegExp(expr)
+            self.resourceProxyModel.setFilterRegularExpression(expr)
             self.info.setText("")
         else:
-            self.resourceProxyModel.setFilterRegExp(None)
+            self.resourceProxyModel.setFilterRegularExpression(QRegularExpression())
             self.info.setText(expr.errorString())
 
     def onSelectionChanged(self, selected, deselected):
@@ -275,7 +287,7 @@ class ResourceBrowser(QWidget):
             idx1 = selectedIdx[0]
             assert isinstance(idx1, QModelIndex)
 
-            uri = idx1.data(Qt.UserRole)
+            uri = idx1.data(Qt.ItemDataRole.UserRole)
             self.updatePreview(uri)
 
     def updatePreview(self, uri: str):
@@ -305,7 +317,7 @@ class ResourceBrowser(QWidget):
 
             if re.search(r"\.(svg|html|xml|txt|js|css)$", uri, re.I) is not None:
                 file = QFile(uri)
-                if file.open(QFile.ReadOnly | QFile.Text):
+                if file.open(QFile.OpenModeFlag.ReadOnly | QFile.OpenModeFlag.Text):
                     stream = QTextStream(file)
                     stream.setAutoDetectUnicode(True)
                     txt = stream.readAll()
@@ -339,5 +351,5 @@ def showResources() -> ResourceBrowser:
     browser = ResourceBrowser()
     browser.show()
     if needQApp:
-        QApplication.instance().exec_()
+        QApplication.instance().exec()
     return browser
