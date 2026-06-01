@@ -27,7 +27,7 @@ caption: Usage
 maxdepth: 1
 ---
 Installation <usage/installation>
-Custom repository <../plugins.xml#http://>
+Custom repository <./plugins.xml#http://>
 PyQGIS Icons Cheatsheet <https://pyqgis-icons-cheatsheet.geotribu.fr/>
 ```
 
