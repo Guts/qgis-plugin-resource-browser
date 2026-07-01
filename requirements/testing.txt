@@ -1,2 +1,2 @@
-packaging>=24.2
+packaging>=26.2
 pytest-cov>=7.1.0
