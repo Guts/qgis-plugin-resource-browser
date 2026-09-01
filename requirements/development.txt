@@ -7,4 +7,4 @@ flake8-isort>=7.0.0
 flake8-qgis>=2.1.0
 isort>=8.0.1
 pre-commit>=4.6.1,<5
-ruff>=0.16.0,<0.17.0
+ruff>=0.16.5,<0.17.0
