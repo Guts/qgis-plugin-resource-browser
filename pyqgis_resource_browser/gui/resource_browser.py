@@ -315,7 +315,10 @@ class ResourceBrowser(QWidget):
                 self.graphicsView.setItem(item)
                 self.graphicsView.uri = uri
 
-            if re.search(r"\.(svg|html|xml|txt|js|css)$", uri, re.I) is not None:
+            if (
+                re.search(r"\.(svg|html|xml|txt|js|css)$", uri, re.IGNORECASE)
+                is not None
+            ):
                 file = QFile(uri)
                 if file.open(QFile.OpenModeFlag.ReadOnly | QFile.OpenModeFlag.Text):
                     stream = QTextStream(file)
