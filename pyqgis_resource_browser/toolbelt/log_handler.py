@@ -1,4 +1,4 @@
-#! python3  # noqa: E265
+#! python3
 
 # standard library
 import logging
@@ -98,8 +98,8 @@ class PlgLogger(logging.Handler):
             try:
                 message = str(message)
             except Exception as err:
-                err_msg = "Log message must be a string, not: {}. Trace: {}".format(
-                    type(message), err
+                err_msg = (
+                    f"Log message must be a string, not: {type(message)}. Trace: {err}"
                 )
                 logging.error(err_msg)
                 message = err_msg

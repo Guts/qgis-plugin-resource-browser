@@ -35,5 +35,3 @@ class ResourceTableView(QTableView):
             )
 
             m.exec(event.globalPos())
-
-        pass
